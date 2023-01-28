@@ -6,3 +6,5 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+# /out is created when the project is built (i.e. Pressing Run)
+/out/
