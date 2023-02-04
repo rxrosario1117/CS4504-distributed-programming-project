@@ -9,9 +9,15 @@
          PrintWriter out = null; // for writing to ServerRouter
          BufferedReader in = null; // for reading form ServerRouter
 			InetAddress addr = InetAddress.getLocalHost();
+//           String[] command1 = { "netsh", "interface", "ip", "set", "address",
+//                   "name=", "Local Area Connection" ,"source=static", "addr=","127.0.0.1",
+//                   "mask=", "127.0.0.2"};
+//           Process pp = java.lang.Runtime.getRuntime().exec(command1);
 			String host = addr.getHostAddress(); // Server machine's IP
+           System.out.println("Server Host: " + host);
+
 //           String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
-			String routerName = "localhost"; // ServerRouter host name
+			String routerName = "127.0.0.1"; // ServerRouter host name
 			int SockNum = 5555; // port number
 			
 			// Tries to connect to the ServerRouter
@@ -33,7 +39,9 @@
          String fromServer; // messages sent to ServerRouter
          String fromClient; // messages received from ServerRouter      
 // 			String address ="10.5.3.196"; // destination IP (Client)
- 			String address ="192.168.56.1"; // destination IP (Client)
+ 			String address ="192.168.68.143"; // destination IP (Client)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
+           // BUT, this doesn't work because the IP Address is the same for all
+           // this one needs to be the IP of the device running the client it is looking for or 127.0.0.1
 
 			// Communication process (initial sends/receives)
 			out.println(address);// initial send (IP of the destination Client)

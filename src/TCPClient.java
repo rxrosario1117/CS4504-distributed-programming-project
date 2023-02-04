@@ -10,8 +10,9 @@
          BufferedReader in = null; // for reading from ServerRouter
 			InetAddress addr = InetAddress.getLocalHost();
 			String host = addr.getHostAddress(); // Client machine's IP
+           System.out.println("Client Host: " + host);
 //      	String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
-      	String routerName = "localhost"; // ServerRouter host name
+      	String routerName = "127.0.0.1"; // ServerRouter host name
 			int SockNum = 5555; // port number
 			
 			// Tries to connect to the ServerRouter
@@ -37,7 +38,10 @@
          String fromServer; // messages received from ServerRouter
          String fromUser; // messages sent to ServerRouter
 //			String address ="10.5.2.109"; // destination IP (Server)
-			String address ="localhost"; // destination IP (Server)
+			String address ="192.168.68.143"; // destination IP (Server)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
+                                                                    // BUT, this doesn't work because the IP Address is the same for all
+           // this one needs to be the IP of the device running the server it is looking for or 127.0.0.1
+
 			long t0, t1, t;
 			
 			// Communication process (initial sends/receives
