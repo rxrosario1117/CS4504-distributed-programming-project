@@ -11,8 +11,8 @@
 			InetAddress addr = InetAddress.getLocalHost();
 			String host = addr.getHostAddress(); // Client machine's IP
 //      	String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
-      	String routerName = "DESKTOP-754SOEM"; // ServerRouter host name
-			int SockNum = 5557; // port number
+      	String routerName = "localhost"; // ServerRouter host name
+			int SockNum = 5555; // port number
 			
 			// Tries to connect to the ServerRouter
          try {
@@ -32,12 +32,12 @@
             }
 				
       	// Variables for message passing	
-         Reader reader = new FileReader("distributed-programming/file.txt");
+         Reader reader = new FileReader("file.txt");
 			BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
          String fromServer; // messages received from ServerRouter
          String fromUser; // messages sent to ServerRouter
 //			String address ="10.5.2.109"; // destination IP (Server)
-			String address ="192.168.56.1"; // destination IP (Server)
+			String address ="localhost"; // destination IP (Server)
 			long t0, t1, t;
 			
 			// Communication process (initial sends/receives

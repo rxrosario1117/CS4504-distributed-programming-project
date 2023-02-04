@@ -11,8 +11,8 @@
 			InetAddress addr = InetAddress.getLocalHost();
 			String host = addr.getHostAddress(); // Server machine's IP
 //           String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
-			String routerName = "DESKTOP-754SOEM"; // ServerRouter host name
-			int SockNum = 5556; // port number
+			String routerName = "localhost"; // ServerRouter host name
+			int SockNum = 5555; // port number
 			
 			// Tries to connect to the ServerRouter
          try {
