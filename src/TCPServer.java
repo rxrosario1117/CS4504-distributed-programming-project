@@ -9,16 +9,17 @@
          PrintWriter out = null; // for writing to ServerRouter
          BufferedReader in = null; // for reading form ServerRouter
 			InetAddress addr = InetAddress.getLocalHost();
-			String host = addr.getHostAddress(); // Server machine's IP			
-			String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
-			int SockNum = 5555; // port number
+			String host = addr.getHostAddress(); // Server machine's IP
+//           String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
+			String routerName = "DESKTOP-754SOEM"; // ServerRouter host name
+			int SockNum = 5556; // port number
 			
 			// Tries to connect to the ServerRouter
          try {
-            Socket = new Socket(host, SockNum);
+            Socket = new Socket(routerName, SockNum);
             out = new PrintWriter(Socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
-         } 
+         }
              catch (UnknownHostException e) {
                System.err.println("Don't know about router: " + routerName);
                System.exit(1);
@@ -31,8 +32,9 @@
       	// Variables for message passing			
          String fromServer; // messages sent to ServerRouter
          String fromClient; // messages received from ServerRouter      
- 			String address ="10.5.3.196"; // destination IP (Client)
-			
+// 			String address ="10.5.3.196"; // destination IP (Client)
+ 			String address ="192.168.56.1"; // destination IP (Client)
+
 			// Communication process (initial sends/receives)
 			out.println(address);// initial send (IP of the destination Client)
 			fromClient = in.readLine();// initial receive from router (verification of connection)

@@ -7,18 +7,21 @@
 			// Variables for setting up connection and communication
          Socket Socket = null; // socket to connect with ServerRouter
          PrintWriter out = null; // for writing to ServerRouter
-         BufferedReader in = null; // for reading form ServerRouter
+         BufferedReader in = null; // for reading from ServerRouter
 			InetAddress addr = InetAddress.getLocalHost();
 			String host = addr.getHostAddress(); // Client machine's IP
-      	String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
-			int SockNum = 5555; // port number
+//      	String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
+      	String routerName = "DESKTOP-754SOEM"; // ServerRouter host name
+			int SockNum = 5557; // port number
 			
 			// Tries to connect to the ServerRouter
          try {
-            Socket = new Socket(host, SockNum);
+            Socket = new Socket(routerName, SockNum);
             out = new PrintWriter(Socket.getOutputStream(), true);
+//            in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
             in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
-         } 
+
+         }
              catch (UnknownHostException e) {
                System.err.println("Don't know about router: " + routerName);
                System.exit(1);
@@ -33,14 +36,16 @@
 			BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
          String fromServer; // messages received from ServerRouter
          String fromUser; // messages sent to ServerRouter
-			String address ="10.5.2.109"; // destination IP (Server)
+//			String address ="10.5.2.109"; // destination IP (Server)
+			String address ="192.168.56.1"; // destination IP (Server)
 			long t0, t1, t;
 			
 			// Communication process (initial sends/receives
 			out.println(address);// initial send (IP of the destination Server)
 			fromServer = in.readLine();//initial receive from router (verification of connection)
 			System.out.println("ServerRouter: " + fromServer);
-			out.println(host); // Client sends the IP of its machine as initial send
+
+			out.println(host + " From TCP Client"); // Client sends the IP of its machine as initial send
 			t0 = System.currentTimeMillis();
       	
 			// Communication while loop
