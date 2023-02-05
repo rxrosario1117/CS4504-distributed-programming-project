@@ -12,6 +12,7 @@
 			//Accepting connections
          ServerSocket serverSocket = null; // server socket for accepting connections
          try {
+             InetAddress addr = InetAddress.getLocalHost();
             serverSocket = new ServerSocket(5555);
             System.out.println("ServerRouter is Listening on port: 5555.");
          }

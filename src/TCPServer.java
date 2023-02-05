@@ -17,7 +17,7 @@
            System.out.println("Server Host: " + host);
 
 //           String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
-			String routerName = "192.168.68.112"; // ServerRouter host name needs to be computer ip address
+			String routerName = "localhost"; // ServerRouter host name needs to be computer ip address or localhost
 			int SockNum = 5555; // port number
 			
 			// Tries to connect to the ServerRouter
