@@ -30,7 +30,7 @@ public class SThread extends Thread
 		try
 		{
 		// Initial sends/receives
-		destination = in.readLine(); // initial read (the destination for writing)
+		destination = in.readLine(); // initial read (the destination for writing) (IP and port gets passed in here)
 		System.out.println("Forwarding to " + destination);
 		out.println("Connected to the router. FROM THE STHREAD"); // confirmation of connection
 		
@@ -46,7 +46,10 @@ public class SThread extends Thread
 		// loops through the routing table to find the destination
 		for ( int i=0; i<10; i++) 
 				{
-					if (destination.equals((String) RTable[i][0])){
+					String[] IP_PortArray = destination.split(":");//has to split colon ip:port into a string array of 2
+					Socket socket = (Socket)RTable[i][1];//create socket for rtable[i][1]
+					if (IP_PortArray[0].equals((String) RTable[i][0]) && IP_PortArray[1] != null
+							&& Integer.parseInt(IP_PortArray[1]) == socket.getPort()){ //need to add comparison for left side ip address and right side port converted to integer
 						outSocket = (Socket) RTable[i][1]; // gets the socket for communication from the table
 						System.out.println("Found destination: " + destination);
 						outTo = new PrintWriter(outSocket.getOutputStream(), true); // assigns a writer

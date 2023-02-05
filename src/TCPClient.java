@@ -12,12 +12,12 @@
 			String host = addr.getHostAddress(); // Client machine's IP
            System.out.println("Client Host: " + host);
 //      	String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
-      	String routerName = "127.0.0.1"; // ServerRouter host name
+      	String routerName = "192.168.68.112"; // ServerRouter host name needs to be computer local ip address
 			int SockNum = 5555; // port number
 			
 			// Tries to connect to the ServerRouter
          try {
-            Socket = new Socket(routerName, SockNum);
+            Socket = new Socket(routerName, SockNum, addr, 49999); // needs to be updated to constructor that sets local address and local port
             out = new PrintWriter(Socket.getOutputStream(), true);
 //            in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
             in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
@@ -38,10 +38,11 @@
          String fromServer; // messages received from ServerRouter
          String fromUser; // messages sent to ServerRouter
 //			String address ="10.5.2.109"; // destination IP (Server)
-			String address ="192.168.68.143"; // destination IP (Server)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
-                                                                    // BUT, this doesn't work because the IP Address is the same for all
+			String address ="192.168.68.112:49998"; // destination IP (Server)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
+           // BUT, this doesn't work because the IP Address is the same for all
            // this one needs to be the IP of the device running the server it is looking for or 127.0.0.1
-
+           // needs to be ip address:port number in 40000 and computer ip address needs to be checked to make sure it hasn't changed
+           //don't hardcode port numbers for anything not local
 			long t0, t1, t;
 			
 			// Communication process (initial sends/receives

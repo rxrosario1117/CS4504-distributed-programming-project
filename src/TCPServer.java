@@ -17,12 +17,12 @@
            System.out.println("Server Host: " + host);
 
 //           String routerName = "j263-08.cse1.spsu.edu"; // ServerRouter host name
-			String routerName = "127.0.0.1"; // ServerRouter host name
+			String routerName = "192.168.68.112"; // ServerRouter host name needs to be computer ip address
 			int SockNum = 5555; // port number
 			
 			// Tries to connect to the ServerRouter
          try {
-            Socket = new Socket(routerName, SockNum);
+            Socket = new Socket(routerName, SockNum, addr, 49998);// needs to be updated to constructor that sets local address and local port
             out = new PrintWriter(Socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
          }
@@ -39,9 +39,10 @@
          String fromServer; // messages sent to ServerRouter
          String fromClient; // messages received from ServerRouter      
 // 			String address ="10.5.3.196"; // destination IP (Client)
- 			String address ="192.168.68.143"; // destination IP (Client)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
+ 			String address ="192.168.68.112:49999"; // destination IP (Client)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
            // BUT, this doesn't work because the IP Address is the same for all
            // this one needs to be the IP of the device running the client it is looking for or 127.0.0.1
+           // needs to be ip address:port number in the 40000 and computer ip address needs to be checked to make sure it hasn't changed
 
 			// Communication process (initial sends/receives)
 			out.println(address);// initial send (IP of the destination Client)
