@@ -66,22 +66,35 @@ public class SThread extends Thread {
 
 				if (inputLine.equals("Bye.")) {
 
-//					Need to search for client/server that just disconnected to remove them from the routing table
-//					This will open up slots for other client/servers that may want to join
+					/*
+					Need to search for client/server that just disconnected to remove them from the routing table
+					This will open up slots for other client/servers that may want to join
+					 */
+// FIXME
+//					As it stands, removing the client/server by setting the element to null, breaks the RTable array.
 
-//					As it stands, setting each element to null will remove existing clients that have not yet disconnected. BAD
+//					for (int i = 0; i < 2; i++) {
+//
+//						String RTableElement = Arrays.toString((RTable[i])); // Turns the Object RTabel[i] type into a String
+//						String[] userSocketInfo = RTableElement.split(","); // Splits RTable elements info up into an array
+//						String userIP = userSocketInfo[0].substring(1); // Isolates the IP of the user from userSocketInfo
+//
+//						if (userIP.equals(addr)) {
+//							RTable[i] = null;
+//						}
+//						if (userIP.equals(destination)) {
+//							RTable[i] = null;
+//						}
+//					}
+//
+//					System.out.println("\n");
+//					for (int i = 0; i < 10; i++) {
+//						for (int j = 0; j < 2; j++) {
+//						}
+//						System.out.println(Arrays.toString(RTable[i]));
+//					}
 
-//					For loop fails with a NullPointerException b/c the elements greater than the number of clients/servers are null
-					for (int i = 0; i < 10; i++) {
-						for (int j = 0; j < 2; j++) {
-							if (RTable[i][j].equals(addr)) {
 
-								System.out.println("SAME ADDRESS");
-
-//								RTable[i][j] = null;
-							}
-						}
-					}
 
 					break; // exit statement
 				}
