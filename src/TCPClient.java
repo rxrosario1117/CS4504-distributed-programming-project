@@ -5,14 +5,14 @@
        public static void main(String[] args) throws IOException {
       	
 			// Variables for setting up connection and communication
-         Socket Socket = null; // socket to connect with ServerRouter
-         PrintWriter out = null; // for writing to ServerRouter
-         BufferedReader in = null; // for reading form ServerRouter
-			InetAddress addr = InetAddress.getLocalHost();
-			String localHost = addr.getHostAddress(); // Client machine's IP
-      	String routerName = "192.168.1.77"; // ServerRouter localHost name
-			int SockNum = 5555; // port number
-			
+           Socket Socket = null; // socket to connect with ServerRouter
+           PrintWriter out = null; // for writing to ServerRouter
+           BufferedReader in = null; // for reading form ServerRouter
+           InetAddress addr = InetAddress.getLocalHost();
+		   String localHost = addr.getHostAddress(); // Client machine's IP
+      	   String routerName = "192.168.1.77"; // ServerRouter localHost name
+		   int SockNum = 5555; // port number
+
 			// Tries to connect to the ServerRouter
          try {
             Socket = new Socket(routerName, SockNum);
