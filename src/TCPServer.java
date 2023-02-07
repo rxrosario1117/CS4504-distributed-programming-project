@@ -31,8 +31,7 @@
       	// Variables for message passing			
          String fromServer; // messages sent to ServerRouter
          String fromClient; // messages received from ServerRouter      
-// 			String address ="192.168.1.76"; // destination IP (Client)
- 			String address ="192.168.1.77"; // destination IP (Client)
+ 			String address ="192.168.1.76"; // destination IP (Client)
 
 			// Communication process (initial sends/receives)
 			out.println(address);// initial send (IP of the destination Client)
