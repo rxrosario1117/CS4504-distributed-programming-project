@@ -34,13 +34,12 @@
             }
 				
       	// Variables for message passing	
-         Reader reader = new FileReader("file.txt"); 
+         Reader reader = new FileReader("CS4504-distributed-programming-project/file.txt");
 			BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
          String fromServer; // messages received from ServerRouter
          String fromUser; // messages sent to ServerRouter
 //			String address =routerName; // destination IP (Server)
-//			String address ="192.168.1.67"; // destination IP (Server)
-			String address ="192.168.1.77"; // destination IP (Server)
+			String address ="192.168.1.67"; // destination IP (Server)
 			long t0, t1, t;
 			
 			// Communication process (initial sends/receives
