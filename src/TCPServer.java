@@ -39,7 +39,7 @@
          String fromServer; // messages sent to ServerRouter
          String fromClient; // messages received from ServerRouter      
 // 			String address ="10.5.3.196"; // destination IP (Client)
- 			String address ="192.168.68.112:49999"; // destination IP (Client)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
+ 			String address ="192.168.1.69:49999"; // destination IP (Client)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
            // BUT, this doesn't work because the IP Address is the same for all
            // this one needs to be the IP of the device running the client it is looking for or 127.0.0.1
            // needs to be ip address:port number in the 40000 and computer ip address needs to be checked to make sure it hasn't changed
@@ -52,11 +52,12 @@
 			// Communication while loop
       	while ((fromClient = in.readLine()) != null) {
             System.out.println("Client said: " + fromClient);
-            if (fromClient.equals("Bye.")) // exit statement
-					break;
-				fromServer = fromClient.toUpperCase(); // converting received message to upper case
-				System.out.println("Server said: " + fromServer);
+            fromServer = fromClient.toUpperCase(); // converting received message to upper case
+            System.out.println("Server said: " + fromServer);
             out.println(fromServer); // sending the converted message back to the Client via ServerRouter
+            if (fromClient.equals("Bye")) { // exit statement
+                break;
+            }
          }
 			
 			// closing connections

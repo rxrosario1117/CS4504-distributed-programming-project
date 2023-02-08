@@ -38,7 +38,7 @@
          String fromServer; // messages received from ServerRouter
          String fromUser; // messages sent to ServerRouter
 //			String address ="10.5.2.109"; // destination IP (Server)
-			String address ="192.168.68.112:49998"; // destination IP (Server)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
+			String address ="192.168.1.69:49998"; // destination IP (Server)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
            // BUT, this doesn't work because the IP Address is the same for all
            // this one needs to be the IP of the device running the server it is looking for or 127.0.0.1
            // needs to be ip address:port number in 40000 and computer ip address needs to be checked to make sure it hasn't changed
@@ -56,17 +56,18 @@
 			// Communication while loop
          while ((fromServer = in.readLine()) != null) {
             System.out.println("Server: " + fromServer);
-				t1 = System.currentTimeMillis();
-            if (fromServer.equals("Bye.")) // exit statement
-               break;
-				t = t1 - t0;
-				System.out.println("Cycle time: " + t);
+            t1 = System.currentTimeMillis();
+            t = t1 - t0;
+            System.out.println("Cycle time: " + t);
           
             fromUser = fromFile.readLine(); // reading strings from a file
             if (fromUser != null) {
                System.out.println("Client: " + fromUser);
                out.println(fromUser); // sending the strings to the Server via ServerRouter
 					t0 = System.currentTimeMillis();
+            }
+            if (fromServer.equals("BYE")) { // exit statement
+                break;
             }
          }
       	
