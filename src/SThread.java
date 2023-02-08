@@ -85,12 +85,12 @@ public class SThread extends Thread {
 ////						}
 ////					}
 //
-					System.out.println("\n");
-					for (int i = 0; i < 10; i++) {
-						for (int j = 0; j < 2; j++) {
-						}
-						System.out.println(Arrays.toString(RTable[i]));
-					}
+//					System.out.println("\n");
+//					for (int i = 0; i < 10; i++) {
+//						for (int j = 0; j < 2; j++) {
+//						}
+//						System.out.println(Arrays.toString(RTable[i]));
+//					}
 
 					break; // exit statement
 				}
