@@ -30,12 +30,12 @@
 				t.start(); // starts the thread
 				ind++; // increments the index
             System.out.println("ServerRouter connected with Client/Server: " + clientSocket.getInetAddress().getHostAddress());
-         }
-             catch (IOException e) {
+            }
+            catch (IOException e) {
                System.err.println("Client/Server failed to connect.");
                System.exit(1);
             }
-			}//end while
+            }//end while
 			
 			//closing connections
 		   clientSocket.close();
