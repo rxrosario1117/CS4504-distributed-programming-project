@@ -1,0 +1,117 @@
+import java.io.*;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Scanner;
+
+public class TCPClientAV {
+    //Variables for calculations
+    int msgCount = 0, totalMsgSize = 0, totalTransmissionSize = 0;
+
+    public static void main(String[] args) throws IOException {
+        // Variables for setting up connection and communication
+        Socket Socket = null; // socket to connect with ServerRouter
+        OutputStream out = null; // for writing to ServerRouter
+        InputStream in = null; // for reading form ServerRouter
+        Scanner sc = new Scanner(System.in);
+        InetAddress addr = InetAddress.getLocalHost();
+        String localHost = addr.getHostAddress(); // Client machine's IP
+        String routerName = "10.0.0.66"; // ServerRouter localHost name
+        int SockNum = 5555; // port number
+
+        // Tries to connect to the ServerRouter
+        try {
+            Thread.sleep(3000);
+            Socket = new Socket(routerName, SockNum);
+            out = Socket.getOutputStream();
+            in = Socket.getInputStream();
+        }
+        catch (UnknownHostException e) {
+            System.err.println("Don't know about router: " + routerName);
+            System.exit(1);
+        }
+        catch (IOException e) {
+            System.err.println("Couldn't get I/O for the connection to: " + routerName);
+            System.exit(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Variables for message passing
+        byte[][] fromFile = FilePacketizer.packetizeFile("./CantinaBand3.wav"); // reader for the string file
+        String fromServer; // messages received from ServerRouter
+        String fromUser = null; // messages sent to ServerRouter
+//			String address =routerName; // destination IP (Server)
+        String address ="10.0.0.66"; // destination IP (Server)
+        double t0, t1, t;
+        //Variables for calculations
+        int msgCount = 0, totalMsgSize = 0, totalTransmissionSize = 0;
+
+        // Communication process (initial sends/receives
+        out.write(address.getBytes());// initial send (IP of the destination Server)
+        fromServer = sc.nextLine();//initial receive from router (verification of connection)
+        System.out.println("ServerRouter: " + fromServer);
+        out.write(localHost.getBytes()); // Client sends the IP of its machine as initial send
+        t0 = System.currentTimeMillis();
+
+        // Communication while loop
+        while ((fromServer = sc.nextLine()) != null) {
+            System.out.println("Server: " + fromServer);
+            t1 = System.currentTimeMillis();
+            if (fromServer.equals("BYE.")){ /* exit statement */
+                break;
+            }
+            t = t1 - t0;
+            totalTransmissionSize += t;
+            System.out.println("Cycle time: " + t);
+
+            for (int i=0; i<fromFile.length; i++){
+                byte[] packet = fromFile[i];
+                out.write(packet);
+                out.flush();
+                msgCount++;
+                totalMsgSize += packet.length;
+                t0 = System.currentTimeMillis();
+
+            }// reading strings from a file
+
+            if (fromUser == null){
+                System.out.println("Client disconnecting...");
+                break;
+            }
+            if (fromUser != null) {
+                System.out.println("Client: " + fromUser);
+                out.write(fromUser.getBytes()); // sending the strings to the Server via ServerRouter
+                msgCount++; //Incrementing message count
+                totalMsgSize += fromUser.length(); //adding length of message to totalMsgSize
+                t0 = System.currentTimeMillis();
+            }
+        }
+
+        // closing connections
+        out.close();
+        in.close();
+        Socket.close();
+
+        double avgMessageSize = 0, avgTransmissionTime = 0, avgLookUpTime = 0;
+        if (msgCount > 0) {
+            avgMessageSize = (double) totalMsgSize/msgCount; //Calculating average message size
+            avgTransmissionTime = (double) totalTransmissionSize/msgCount;
+        }
+
+        //Writing statistical results to results.txt
+        FileWriter resultFW = new FileWriter("results.txt");
+        BufferedWriter resultBW = new BufferedWriter(resultFW);
+        try {
+            resultBW.write("Average message size is: " + avgMessageSize+" characters");
+            resultBW.newLine();
+            resultBW.write("Average transmission time is: "+(avgTransmissionTime/60)+" seconds");
+        } catch (IOException e) {
+            System.out.println("Error writing to file: "+e.getMessage());
+        }
+        finally {
+            resultBW.close();
+            resultFW.close();
+        }
+    }
+}

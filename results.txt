@@ -1,0 +1,2 @@
+Average message size is: 17.6 characters
+Average transmission time is: 33.806666666666665 seconds

@@ -8,7 +8,7 @@
          Object [][] RoutingTable = new Object [10][2]; // routing table
 			int SockNum = 5555; // port number
 			Boolean Running = true;
-			int ind = 0; // indext in the routing table
+			int ind = 0; // index in the routing table
 
 			//Accepting connections
          ServerSocket serverSocket = null; // server socket for accepting connections
@@ -22,7 +22,7 @@
             }
 			
 			// Creating threads with accepted connections
-			while (Running == true)
+			while (Running)
 			{
 			try {
 				clientSocket = serverSocket.accept();
@@ -40,6 +40,9 @@
 			//closing connections
 		   clientSocket.close();
          serverSocket.close();
+      }
+      public static void updateRoutingTable(Object[][] RoutingTable, Socket clientSocket, int index){
+           RoutingTable[index][0] = clientSocket.getInetAddress().getHostAddress();
 
       }
    }

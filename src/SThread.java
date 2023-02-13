@@ -71,29 +71,23 @@ public class SThread extends Thread {
 //// FIXME
 ////					As it stands, removing the client/server by setting the element to null, breaks the RTable array.
 //
-////					for (int i = 0; i < 2; i++) {
-////
-////						String RTableElement = Arrays.toString((RTable[i])); // Turns the Object RTabel[i] type into a String
-////						String[] userSocketInfo = RTableElement.split(","); // Splits RTable elements info up into an array
-////						String userIP = userSocketInfo[0].substring(1); // Isolates the IP of the user from userSocketInfo
-////
-////						if (userIP.equals(addr)) {
-////							RTable[i] = null;
-////						}
-////						if (userIP.equals(destination)) {
-////							RTable[i] = null;
-////						}
-////					}
+//					for (int i = 0; i < 10; i++) {
+//						for (int j=0; j<2; j++){
+//							String RTableElement = Arrays.toString((RTable[i])); // Turns the Object RTabel[i] type into a String
+//							String[] userSocketInfo = RTableElement.split(","); // Splits RTable elements info up into an array
+//							String userIP = userSocketInfo[0].substring(1); // Isolates the IP of the user from userSocketInfo
+//
+//							if (userIP.equals(addr)&&userIP.equals(destination)) {
+//								RTable[i][j] = RTable[i+1][j+1];
+//							}
+//						}
+//					}
 //
 //					System.out.println("\n");
 //					for (int i = 0; i < 10; i++) {
-//						for (int j = 0; j < 2; j++) {
-//						}
 //						System.out.println(Arrays.toString(RTable[i]));
-//					}
-
-					break; // exit statement
-				}
+					}
+					break; // exit statement				}
 			}// end while
 		}
 		catch (IOException e) {
