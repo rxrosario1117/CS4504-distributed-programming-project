@@ -9,7 +9,7 @@
            BufferedReader in = null; // for reading form ServerRouter
            InetAddress addr = InetAddress.getLocalHost();
 		   String localHost = addr.getHostAddress(); // Client machine's IP
-      	   String routerName = "192.168.1.77"; // ServerRouter localHost name
+      	   String routerName = "192.168.1.76"; // ServerRouter localHost name
 		   int SockNum = 5555; // port number
 
 			// Tries to connect to the ServerRouter

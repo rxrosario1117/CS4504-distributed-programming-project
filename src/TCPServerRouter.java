@@ -13,7 +13,7 @@
 			//Accepting connections
          ServerSocket serverSocket = null; // server socket for accepting connections
          try {
-            serverSocket = new ServerSocket(5555);
+            serverSocket = new ServerSocket(SockNum);
             System.out.println("ServerRouter is Listening on port: 5555.");
          }
              catch (IOException e) {
@@ -22,7 +22,7 @@
             }
 			
 			// Creating threads with accepted connections
-			while (Running == true)
+			while (Running)
 			{
 			try {
 				clientSocket = serverSocket.accept();
