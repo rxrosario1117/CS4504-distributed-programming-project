@@ -80,7 +80,7 @@ import java.net.*;
              }
          }
 
-           // closing connections
+         // closing connections
          out.close();
          in.close();
          Socket.close();

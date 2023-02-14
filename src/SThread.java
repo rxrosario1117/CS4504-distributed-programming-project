@@ -22,7 +22,7 @@ public class SThread extends Thread {
 		ind = index;
 
 		// Prints out the current port being used for the client/server
-		System.out.println("\nForeign address port (Client/server port) " + toClient.getPort() + "\n");
+		System.out.println("\nForeign address port (Client/server port) " + toClient.getPort() + "\n ");
 	}
 
 	// Run method (will run for each machine that connects to the ServerRouter)
