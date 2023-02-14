@@ -3,12 +3,17 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import javax.sound.sampled.*;
 
 public class TCPClientAV {
     //Variables for calculations
     int msgCount = 0, totalMsgSize = 0, totalTransmissionSize = 0;
+    private static BufferedInputStream inputStream;
 
-    public static void main(String[] args) throws IOException {
+    public TCPClientAV() throws IOException {
+    }
+
+    public static void main(String[] args) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         // Variables for setting up connection and communication
         Socket Socket = null; // socket to connect with ServerRouter
         OutputStream out = null; // for writing to ServerRouter
@@ -38,7 +43,8 @@ public class TCPClientAV {
         }
 
         // Variables for message passing
-        byte[][] fromFile = FilePacketizer.packetizeFile("./CantinaBand3.wav"); // reader for the string file
+        inputStream = new BufferedInputStream(Socket.getInputStream());
+        AudioInputStream ais = AudioSystem.getAudioInputStream(inputStream); // reader for the string file
         String fromServer; // messages received from ServerRouter
         String fromUser = null; // messages sent to ServerRouter
 //			String address =routerName; // destination IP (Server)
@@ -54,44 +60,31 @@ public class TCPClientAV {
         out.write(localHost.getBytes()); // Client sends the IP of its machine as initial send
         t0 = System.currentTimeMillis();
 
+        Clip clip = AudioSystem.getClip();
+        clip.open(ais);
+        clip.start();
+
         // Communication while loop
-        while ((fromServer = sc.nextLine()) != null) {
-            System.out.println("Server: " + fromServer);
+        while (inputStream != null) {
             t1 = System.currentTimeMillis();
-            if (fromServer.equals("BYE.")){ /* exit statement */
-                break;
+            if (clip.isActive()) {
+
+                System.out.println("********** Buffred *********" + inputStream.available());
+
             }
             t = t1 - t0;
             totalTransmissionSize += t;
             System.out.println("Cycle time: " + t);
 
-            for (int i=0; i<fromFile.length; i++){
-                byte[] packet = fromFile[i];
-                out.write(packet);
-                out.flush();
-                msgCount++;
-                totalMsgSize += packet.length;
-                t0 = System.currentTimeMillis();
+            t0 = System.currentTimeMillis();
 
             }// reading strings from a file
-
-            if (fromUser == null){
-                System.out.println("Client disconnecting...");
-                break;
-            }
-            if (fromUser != null) {
-                System.out.println("Client: " + fromUser);
-                out.write(fromUser.getBytes()); // sending the strings to the Server via ServerRouter
-                msgCount++; //Incrementing message count
-                totalMsgSize += fromUser.length(); //adding length of message to totalMsgSize
-                t0 = System.currentTimeMillis();
-            }
-        }
 
         // closing connections
         out.close();
         in.close();
         Socket.close();
+        clip.close();
 
         double avgMessageSize = 0, avgTransmissionTime = 0, avgLookUpTime = 0;
         if (msgCount > 0) {
@@ -102,16 +95,10 @@ public class TCPClientAV {
         //Writing statistical results to results.txt
         FileWriter resultFW = new FileWriter("results.txt");
         BufferedWriter resultBW = new BufferedWriter(resultFW);
-        try {
-            resultBW.write("Average message size is: " + avgMessageSize+" characters");
-            resultBW.newLine();
-            resultBW.write("Average transmission time is: "+(avgTransmissionTime/60)+" seconds");
-        } catch (IOException e) {
-            System.out.println("Error writing to file: "+e.getMessage());
-        }
-        finally {
-            resultBW.close();
-            resultFW.close();
-        }
+        resultBW.write("Average message size is: " + avgMessageSize+" characters");
+        resultBW.newLine();
+        resultBW.write("Average transmission time is: "+(avgTransmissionTime/60)+" seconds");
+        resultBW.close();
+        resultFW.close();
     }
 }
