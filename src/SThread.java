@@ -1,8 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.lang.Exception;
-import java.util.Arrays;
-
 
 public class SThread extends Thread {
 	private Object [][] RTable; // routing table

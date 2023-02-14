@@ -12,7 +12,7 @@
            String host = addr.getHostAddress(); // Server machine's IP
 
            // This IP is the server router for my local network
-           String routerName = "10.74.24.162"; // ServerRouter host name
+           String routerName = "192.168.1.76"; // ServerRouter host name
 
            int SockNum = 5555; // port number
 			
@@ -38,7 +38,7 @@
            // Client 1
 // 			String address ="10.74.24.131"; // destination IP (Client 1)
            //Client2
- 			String address ="10.100.68.245"; // destination IP (Client 2)
+ 			String address ="192.168.1.77"; // destination IP (Client 2)
 
 			// Communication process (initial sends/receives)
 			out.println(address);// initial send (IP of the destination Client)

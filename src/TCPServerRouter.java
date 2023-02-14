@@ -1,6 +1,5 @@
-	import java.net.*;
-   import java.io.*;
-    import java.util.Arrays;
+import java.net.*;
+import java.io.*;
 
     public class TCPServerRouter {
        public static void main(String[] args) throws IOException {
