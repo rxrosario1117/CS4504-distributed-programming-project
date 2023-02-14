@@ -3,22 +3,24 @@
 
     public class TCPServer {
        public static void main(String[] args) throws IOException {
-      	
-			// Variables for setting up connection and communication
-         Socket Socket = null; // socket to connect with ServerRouter
-         PrintWriter out = null; // for writing to ServerRouter
-         BufferedReader in = null; // for reading form ServerRouter
-			InetAddress addr = InetAddress.getLocalHost();
-			String host = addr.getHostAddress(); // Server machine's IP			
-//			String routerName = "192.168.1.77"; // ServerRouter host name
-			String routerName = "10.74.24.162"; // ServerRouter host name
-			int SockNum = 5555; // port number
+
+           // Variables for setting up connection and communication
+           Socket Socket = null; // socket to connect with ServerRouter
+           PrintWriter out = null; // for writing to ServerRouter
+           BufferedReader in = null; // for reading form ServerRouter
+           InetAddress addr = InetAddress.getLocalHost();
+           String host = addr.getHostAddress(); // Server machine's IP
+
+           // This IP is the server router for my local network
+           String routerName = "10.74.24.162"; // ServerRouter host name
+
+           int SockNum = 5555; // port number
 			
 			// Tries to connect to the ServerRouter
          try {
-            Socket = new Socket(routerName, SockNum);
-            out = new PrintWriter(Socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
+             Socket = new Socket(routerName, SockNum);
+             out = new PrintWriter(Socket.getOutputStream(), true);
+             in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
          } 
              catch (UnknownHostException e) {
                System.err.println("Don't know about router: " + routerName);
@@ -29,11 +31,13 @@
                System.exit(1);
             }
 				
-      	// Variables for message passing			
+      	 // Variables for message passing
          String fromServer; // messages sent to ServerRouter
-         String fromClient; // messages received from ServerRouter      
-// 			String address ="192.168.1.76"; // destination IP (Client)
+         String fromClient; // messages received from ServerRouter
+
+           // Client 1
 // 			String address ="10.74.24.131"; // destination IP (Client 1)
+           //Client2
  			String address ="10.100.68.245"; // destination IP (Client 2)
 
 			// Communication process (initial sends/receives)

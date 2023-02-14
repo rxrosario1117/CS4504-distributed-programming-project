@@ -1,16 +1,20 @@
-   import java.io.*;
-   import java.net.*;
+import java.io.*;
+import java.net.*;
 
-    public class TCPClient {
+   public class TCPClient {
+
        public static void main(String[] args) throws IOException {
+
 			// Variables for setting up connection and communication
            Socket Socket = null; // socket to connect with ServerRouter
            PrintWriter out = null; // for writing to ServerRouter
            BufferedReader in = null; // for reading form ServerRouter
            InetAddress addr = InetAddress.getLocalHost();
 		   String localHost = addr.getHostAddress(); // Client machine's IP
-//      	   String routerName = "192.168.1.77"; // ServerRouter localHost name
-      	   String routerName = "192.168.1.76"; // ServerRouter localHost name (KSU pc)
+
+           // IP for my local server router machine
+      	   String routerName = "192.168.1.76"; // ServerRouter localHost name
+
 		   int SockNum = 5555; // port number
 
 			// Tries to connect to the ServerRouter
@@ -30,17 +34,20 @@
             }
 
       	// Variables for message passing	
-         Reader reader = new FileReader("./file.txt");
-			BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
-         String fromServer; // messages received from ServerRouter
-         String fromUser; // messages sent to ServerRouter
-//			String address =routerName; // destination IP (Server)
+           Reader reader = new FileReader("./file.txt");
+           BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
+           String fromServer; // messages received from ServerRouter
+           String fromUser; // messages sent to ServerRouter
+
+           // Local IP for the server
 			String address ="192.168.1.67"; // destination IP (Server)
+
 			long t0, t1, t;
-            //Variables for calculations
+
+            //Variables for calculations and gathering data
            int msgCount = 0, totalMsgSize = 0, totalTransmissionSize = 0;
 			
-			// Communication process (initial sends/receives
+			// Communication process (initial sends/receives)
 			out.println(address);// initial send (IP of the destination Server)
 			fromServer = in.readLine();//initial receive from router (verification of connection)
 			System.out.println("ServerRouter: " + fromServer);
@@ -51,29 +58,35 @@
          while ((fromServer = in.readLine()) != null) {
              System.out.println("Server: " + fromServer);
              t1 = System.currentTimeMillis();
+
+             // Updated to receive a final capitalized phrase from the server
              if (fromServer.equals("BYE.")) /* exit statement */
                  break;
 
              t = t1 - t0;
+
+//             Captures the total transmission size of the message
              totalTransmissionSize += t;
              System.out.println("Cycle time: " + t);
-          
+
              fromUser = fromFile.readLine(); // reading strings from a file
              if (fromUser != null) {
                  System.out.println("Client: " + fromUser);
                  out.println(fromUser); // sending the strings to the Server via ServerRouter
-                 msgCount++; //Incrementing message count
+
+                 msgCount++; // Incrementing message count
                  totalMsgSize += fromUser.length(); //adding length of message to totalMsgSize
                  t0 = System.currentTimeMillis();
              }
          }
-      	
-			// closing connections
+
+           // closing connections
          out.close();
          in.close();
          Socket.close();
 
-         double avgMessageSize = 0, avgTransmissionTime = 0, avgLookUpTime = 0;
+         // Stores the metrics gathered and performs some final calculations
+         double avgMessageSize = 0, avgTransmissionTime = 0;
          if (msgCount > 0) {
              avgMessageSize = (double) totalMsgSize/msgCount; //Calculating average message size
              avgTransmissionTime = (double) totalTransmissionSize/msgCount;

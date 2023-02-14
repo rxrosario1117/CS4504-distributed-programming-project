@@ -1,4 +1,3 @@
 Hello
-How are you
-Good day
+Client 1
 Bye.

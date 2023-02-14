@@ -1,0 +1,2 @@
+Average message size is: 8.666666666666666
+Average transmission time is: 5329.0
