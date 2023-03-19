@@ -52,14 +52,6 @@
 			System.out.println("ServerRouter: " + fromClient);
             System.out.println("IP address: " + in.readLine());
 
-//            FileOutputStream fileOutputStream = new FileOutputStream("newFile.txt");
-//            byte[] buffer = new byte[16*1024];
-//            long size = in.readLine().length();
-//
-//            int bytes;
-//            while (size > 0 && (bytes = dataInputStream.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
-//                fileOutputStream.write(buffer, 0, bytes);
-//            }
 //            String fileName = "./newWav.wav";
             String fileType = in.readLine();
             System.out.println("File type: " + fileType);
@@ -82,21 +74,19 @@
             else if (fileType.equalsIgnoreCase("wav")) {
                 DataOutputStream dataOut = null;
                 DataInputStream dataIn = null;
-
-                // Connection to the serverRouter to send the .wav file
-                Socket wavSocket = new Socket(routerName, Socket.getPort());
-                dataIn = new DataInputStream(wavSocket.getInputStream());
-                dataOut = new DataOutputStream(wavSocket.getOutputStream());
-                System.out.println("Connected");
-
-//                try {
-//                    receiveWavFile("newWav.wav");
-//                }
-//                catch (Exception e) {
-//                    System.out.println(e.getMessage());
-//                }
+                Socket wavSocket = null;
 
                 try {
+                    // Connection to the serverRouter to send the .wav file
+                    wavSocket = new Socket(routerName, Socket.getPort());
+
+                    System.out.println("Remote Socket: " + wavSocket.getRemoteSocketAddress());
+                    System.out.println("Local Socket: " + wavSocket.getLocalSocketAddress());
+
+                    dataIn = new DataInputStream(wavSocket.getInputStream());
+                    dataOut = new DataOutputStream(wavSocket.getOutputStream());
+                    System.out.println("Connected");
+
                     int bytes = 0;
                     FileOutputStream fileOutputStream = new FileOutputStream("newWav.wav");
 
