@@ -2,22 +2,18 @@ import java.io.*;
 import java.net.*;
 
    public class TCPClient {
-
        public static void main(String[] args) throws IOException {
 
-			// Variables for setting up connection and communication
+           // Variables for setting up connection and communication
            Socket Socket = null; // socket to connect with ServerRouter
            PrintWriter out = null; // for writing to ServerRouter
            BufferedReader in = null; // for reading form ServerRouter
            InetAddress addr = InetAddress.getLocalHost();
-		   String localHost = addr.getHostAddress(); // Client machine's IP
-
-           // IP for my local server router machine
-      	   String routerName = "192.168.1.76"; // ServerRouter localHost name
-
+		   String host = addr.getHostAddress(); // Client machine's IP
+      	   String routerName = "192.168.1.76"; // ServerRouter host name
 		   int SockNum = 5555; // port number
 
-			// Tries to connect to the ServerRouter
+           // Tries to connect to the ServerRouter
            try {
                Socket = new Socket(routerName, SockNum);
                out = new PrintWriter(Socket.getOutputStream(), true);
@@ -33,53 +29,102 @@ import java.net.*;
                System.exit(1);
             }
 
-      	// Variables for message passing	
-           Reader reader = new FileReader("./file.txt");
+           // File name and the file type
+//           String fileName = "file.txt";
+           String fileName = "CantinaBand3.wav";
+           File file = new File(fileName); // Used in the Reader object
+           String fileType = getFileType(fileName);
+
+           // Variables for message passing
+           Reader reader = new FileReader(file);
            BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
+
            String fromServer; // messages received from ServerRouter
            String fromUser; // messages sent to ServerRouter
+           String address ="192.168.1.80"; // destination IP (Server)
 
-           // Local IP for the server
-			String address ="192.168.1.67"; // destination IP (Server)
-
-			long t0, t1, t;
-
-            //Variables for calculations and gathering data
-           int msgCount = 0, totalMsgSize = 0, totalTransmissionSize = 0;
+           long t0, t1, t;
+            // Variables for calculations and gathering data
+            int msgCount = 0, totalMsgSize = 0, totalTransmissionSize = 0;
 			
 			// Communication process (initial sends/receives)
 			out.println(address);// initial send (IP of the destination Server)
 			fromServer = in.readLine();//initial receive from router (verification of connection)
 			System.out.println("ServerRouter: " + fromServer);
-			out.println(localHost); // Client sends the IP of its machine as initial send
+			out.println(host); // Client sends the IP of its machine as initial send
 			t0 = System.currentTimeMillis();
-      	
-			// Communication while loop
-         while ((fromServer = in.readLine()) != null) {
-             System.out.println("Server: " + fromServer);
-             t1 = System.currentTimeMillis();
 
-             // Updated to receive a final capitalized phrase from the server
-             if (fromServer.equals("BYE.")) /* exit statement */
-                 break;
+           // send the fileType
+           out.println(fileType);
+           out.println("");
 
-             t = t1 - t0;
+            if (fileType.equalsIgnoreCase("txt")) {
+                // Communication while loop
+                while ((fromServer = in.readLine()) != null) {
+                    System.out.println("Server: " + fromServer);
+                    t1 = System.currentTimeMillis();
 
-//             Captures the total transmission size of the message
-             totalTransmissionSize += t;
-             System.out.println("Cycle time: " + t);
+                    // Updated to receive a final capitalized phrase from the server
+                    if (fromServer.equals("BYE.")) /* exit statement */
+                        break;
 
-             fromUser = fromFile.readLine(); // reading strings from a file
-             if (fromUser != null) {
-                 System.out.println("Client: " + fromUser);
-                 out.println(fromUser); // sending the strings to the Server via ServerRouter
+                    t = t1 - t0;
 
-                 msgCount++; // Incrementing message count
-                 totalMsgSize += fromUser.length(); //adding length of message to totalMsgSize
-                 t0 = System.currentTimeMillis();
-             }
-         }
+                    // Captures the total transmission size of the message
+                    totalTransmissionSize += t;
+                    System.out.println("Cycle time: " + t);
 
+                    fromUser = fromFile.readLine(); // reading strings from a file
+                    if (fromUser != null) {
+
+                        System.out.println("Client: " + fromUser);
+                        out.println(fromUser); // sending the strings to the Server via ServerRouter
+
+                        msgCount++; // Incrementing message count
+                        totalMsgSize += fromUser.length(); //adding length of message to totalMsgSize
+                        t0 = System.currentTimeMillis();
+                    }
+                }
+
+            }
+
+            else if (fileType.equalsIgnoreCase("wav")) {
+                DataOutputStream dataOut = null;
+                DataInputStream dataIn = null;
+                Socket wavSocket = null;
+
+                // Connection to the serverRouter to send the .wav file
+
+//                try (ServerSocket serverSocket = new ServerSocket(Socket.getPort())) {
+//                    wavSocket = serverSocket.accept();
+                try {
+                    wavSocket = new Socket(routerName, Socket.getPort());
+                    dataIn = new DataInputStream(wavSocket.getInputStream());
+                    dataOut = new DataOutputStream(wavSocket.getOutputStream());
+
+                    int bytes = 0;
+                    FileInputStream fileInputStream = new FileInputStream(file);
+
+                    // Send to the server
+                    dataOut.writeLong(file.length());
+                    // Break up the data into pieces, like a datagram
+                    byte[] buffer = new byte[4 * 1024];
+                    while ((bytes = fileInputStream.read(buffer))!= -1) {
+                        // Send to the serverSocket
+                        dataOut.write(buffer, 0, bytes);
+                        dataOut.flush();
+                    }
+
+                    fileInputStream.close();
+                    dataIn.close();
+                    dataOut.close();
+                    wavSocket.close();
+
+                }
+                catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
          // closing connections
          out.close();
          in.close();
@@ -105,5 +150,12 @@ import java.net.*;
          } catch (IOException e) {
              System.out.println("Error writing to file: "+e.getMessage());
          }
+       }
+
+       /**
+        * Returns the file type of the given file
+        */
+       public static String getFileType(String fileName) {
+           return fileName.split("\\.")[1];
        }
    }
