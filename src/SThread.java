@@ -51,19 +51,33 @@ public class SThread extends Thread {
 			}
 
 			// Communication loop
-			while ((inputLine = in.readLine()) != null) {
-				System.out.println("Client/Server said: " + inputLine);
+			String file = "txt";
 
-				outputLine = inputLine; // passes the input from the machine to the output string for the destination
+			if (file.equalsIgnoreCase("txt")) {
+				while ((inputLine = in.readLine()) != null) {
 
-				if (outSocket != null){
-					outTo.println(outputLine); // writes to the destination
+					System.out.println("Client/Server said: " + inputLine);
+
+					outputLine = inputLine; // passes the input from the machine to the output string for the destination
+
+					if (outSocket != null) {
+						outTo.println(outputLine); // writes to the destination
+					}
+
+					if (inputLine.equals("Bye.")) {
+						break; // exit statement
+					}
+				}// end while
+			}
+			else if (file.equalsIgnoreCase("wav")) {
+
+				try {
+
+					System.out.println("Inside wav try block");
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
 				}
-
-				if (inputLine.equals("Bye.")) {
-					break; // exit statement
-				}
-			}// end while
+			}
 		}
 		catch (IOException e) {
 			System.err.println("Could not listen to socket.");
