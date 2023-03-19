@@ -30,8 +30,8 @@ import java.net.*;
             }
 
            // File name and the file type
-//           String fileName = "file.txt";
-           String fileName = "CantinaBand3.wav";
+           String fileName = "file.txt";
+//           String fileName = "CantinaBand3.wav";
            File file = new File(fileName); // Used in the Reader object
            String fileType = getFileType(fileName);
 
@@ -89,35 +89,38 @@ import java.net.*;
             }
 
             else if (fileType.equalsIgnoreCase("wav")) {
-                DataOutputStream dataOut = null;
-                DataInputStream dataIn = null;
+                FileInputStream dataIn = null; // Takes bytes from the file
+                BufferedInputStream audioOut = null; // Adds functionality to the FileInputStream
+                OutputStream outputStream = null; // Used to send the bytes out
                 Socket wavSocket = null;
 
                 // Connection to the serverRouter to send the .wav file
+                try (ServerSocket serverSocket = new ServerSocket(Socket.getPort())) {
+                    wavSocket = serverSocket.accept();
 
-//                try (ServerSocket serverSocket = new ServerSocket(Socket.getPort())) {
-//                    wavSocket = serverSocket.accept();
-                try {
-                    wavSocket = new Socket(routerName, Socket.getPort());
-                    dataIn = new DataInputStream(wavSocket.getInputStream());
-                    dataOut = new DataOutputStream(wavSocket.getOutputStream());
+                    System.out.println("CONNECTED TO SERVER");
+
+                    dataIn = new FileInputStream(file);
+                    audioOut = new BufferedInputStream(dataIn);
+
+                    byte[] buffer = new byte[(int) file.length()];
+
+                    audioOut.read(buffer, 0, buffer.length); // Reads bytes from the file into the buffer array
 
                     int bytes = 0;
-                    FileInputStream fileInputStream = new FileInputStream(file);
 
                     // Send to the server
-                    dataOut.writeLong(file.length());
+                    outputStream = wavSocket.getOutputStream();
                     // Break up the data into pieces, like a datagram
-                    byte[] buffer = new byte[4 * 1024];
-                    while ((bytes = fileInputStream.read(buffer))!= -1) {
+
+                    while ((bytes = dataIn.read(buffer))!= -1) {
                         // Send to the serverSocket
-                        dataOut.write(buffer, 0, bytes);
-                        dataOut.flush();
+                        outputStream.write(buffer, 0, bytes);
+                        outputStream.flush();
                     }
 
-                    fileInputStream.close();
                     dataIn.close();
-                    dataOut.close();
+                    outputStream.close();
                     wavSocket.close();
 
                 }
