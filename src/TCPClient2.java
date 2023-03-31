@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class TCPClient {
+public class TCPClient2 {
     public static void main(String[] args) throws IOException {
 
         // Variables for setting up connection and communication
@@ -14,8 +14,6 @@ public class TCPClient {
         BufferedReader in = null; // for reading form ServerRouter
         InetAddress addr = InetAddress.getLocalHost();
         String localHost = addr.getHostAddress(); // Client machine's IP
-        // name of client to be put in RTable
-        String usersName = "T1";
 
         // IP for my local server router machine
         String routerName = "192.168.4.34"; // ServerRouter localHost name
@@ -39,10 +37,10 @@ public class TCPClient {
         String fileName = "./CantinaBand3.wav";
         Reader reader = new FileReader(fileName);
         BufferedReader fromFile = new BufferedReader(reader); // reader for the string file
-        String fromRouter; // messages received from ServerRouter
+        String fromServer; // messages received from ServerRouter
         String fromUser; // messages sent to ServerRouter
         // Local IP for the server
-        String destinationName = "T2"; // destination Name (Client 2)
+        String address = "192.168.4.48"; // destination IP (Server)
 
         long t0, t1, t;
 
@@ -50,19 +48,17 @@ public class TCPClient {
         int msgCount = 0, totalMsgSize = 0, totalTransmissionSize = 0;
 
         // Communication process (initial sends/receives)
-        out.println(destinationName);// initial send (IP of the destination Server)
-        fromRouter = in.readLine();// initial receive from router (verification of connection)
-        System.out.println("ServerRouter: " + fromRouter);
+        out.println(address);// initial send (IP of the destination Server)
+        fromServer = in.readLine();// initial receive from router (verification of connection)
+        System.out.println("ServerRouter: " + fromServer);
         out.println(localHost); // Client sends the IP of its machine as initial send
-
-        // for client2
         out.println(fileName);
         System.out.println("Here");
         t0 = System.currentTimeMillis();
 
         // Communication while loop
-        while ((fromRouter = in.readLine()) != null) {
-            System.out.println("Server: " + fromRouter);
+        while ((fromServer = in.readLine()) != null) {
+            System.out.println("Server: " + fromServer);
             t1 = System.currentTimeMillis();
             if (!fileName.contains(".txt")) {
                 Path path = Paths.get(fileName);
@@ -73,7 +69,7 @@ public class TCPClient {
                 break;
             }
             // Updated to receive a final capitalized phrase from the server
-            if (fromRouter.equals("BYE.")) /* exit statement */
+            if (fromServer.equals("BYE.")) /* exit statement */
                 break;
 
             t = t1 - t0;

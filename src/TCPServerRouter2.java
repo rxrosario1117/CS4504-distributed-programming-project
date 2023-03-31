@@ -2,7 +2,7 @@ import java.net.*;
 import java.io.*;
 import java.util.Arrays;
 
-public class TCPServerRouter {
+public class TCPServerRouter2 {
    public static void main(String[] args) throws IOException {
       Socket clientSocket = null; // socket for the thread
       Object[][] RoutingTable = new Object[100][3]; // routing table
