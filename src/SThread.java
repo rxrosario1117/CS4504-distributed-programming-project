@@ -14,15 +14,14 @@ public class SThread extends Thread {
 	/**
 	 * Constructor
 	 */
-	SThread(Object [][] Table, Socket toClient, int index) throws IOException {
+	SThread(Object[][] Table, Socket toClient, int index, String nickname) throws IOException {
 		out = new PrintWriter(toClient.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(toClient.getInputStream()));
 		RTable = Table;
 		addr = toClient.getInetAddress().getHostAddress();
 		RTable[index][0] = addr; // IP addresses
 		RTable[index][1] = toClient; // sockets for communication
-		RTable[index][2] 
-		ind = index;
+		RTable[index][2] = nickname;
 
 		System.out.println("\nForeign address port (Client/server port) " + toClient.getPort() + "\n");
 	}
