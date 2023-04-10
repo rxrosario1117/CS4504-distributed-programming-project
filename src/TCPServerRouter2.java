@@ -9,13 +9,14 @@ public class TCPServerRouter2 {
       int SockNum = 5555; // port number
       Boolean Running = true;
       int ind = 0; // indext in the routing table
-      String nickname = "";
+      String SenderNickname = "";
+      String RecievNickname = "";
 
       // Accepting connections
       ServerSocket serverSocket = null; // server socket for accepting connections
       try {
          serverSocket = new ServerSocket(5556);
-         System.out.println("ServerRouter is Listening on port: 5555.");
+         System.out.println("ServerRouter is Listening on port: " + serverSocket.getLocalPort());
       } catch (IOException e) {
          System.err.println("Could not listen on port: 5555.");
          System.exit(1);
@@ -25,7 +26,9 @@ public class TCPServerRouter2 {
       while (Running == true) {
          try {
             clientSocket = serverSocket.accept();
-            SThread t = new SThread(RoutingTable, clientSocket, ind, nickname); // creates a thread with a random port
+            SThread t = new SThread(RoutingTable, clientSocket, ind, SenderNickname, RecievNickname); // creates a
+                                                                                                      // thread with a
+                                                                                                      // random port
             t.start(); // starts the thread
 
             ind++; // increments the index
