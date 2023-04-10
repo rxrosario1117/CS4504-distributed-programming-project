@@ -43,6 +43,7 @@ public class TCPClient {
         String fromUser; // messages sent to ServerRouter
         // Local IP for the server
         String destinationName = "T2"; // destination Name (Client 2)
+        String SenderNickname = "T1";
 
         long t0, t1, t;
 
@@ -53,6 +54,7 @@ public class TCPClient {
         out.println(destinationName);// initial send (IP of the destination Server)
         fromRouter = in.readLine();// initial receive from router (verification of connection)
         System.out.println("ServerRouter: " + fromRouter);
+        out.println(SenderNickname);
         out.println(localHost); // Client sends the IP of its machine as initial send
 
         // for client2
