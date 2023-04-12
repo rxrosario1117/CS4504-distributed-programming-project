@@ -64,6 +64,11 @@ public class TCPClient2 {
         out.println(fileName);
         t0 = System.currentTimeMillis();
 
+        // Temp loop to stop client from terminating
+        while (true) {
+
+        }
+
 //        // Communication while loop
 //        while ((fromRouter = in.readLine()) != null) {
 //            System.out.println("Server: " + fromRouter);

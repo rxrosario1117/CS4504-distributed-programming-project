@@ -59,9 +59,9 @@ public class TCPServerRouter2 {
                 System.out.println(
                         "ServerRouter connected with Client/Server: " + clientSocket.getInetAddress().getHostAddress());
 
-                if (t.lookupNickname(destinationFromSRouter1)) {
-                    System.out.println(destinationFromSRouter1 + " exists in the RTable");
-                }
+                // Return T/F depending on the existence of a client/server
+                serverRouterOut.println(t.lookupNickname(destinationFromSRouter1));
+
             } catch (IOException e) {
                 System.err.println("Client/Server failed to connect.");
                 System.exit(1);

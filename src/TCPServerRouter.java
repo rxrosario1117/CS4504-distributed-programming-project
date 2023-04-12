@@ -1,6 +1,7 @@
 import java.net.*;
 import java.io.*;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class TCPServerRouter {
     public static void main(String[] args) throws IOException {
@@ -55,13 +56,27 @@ public class TCPServerRouter {
 //                Store destination from client1 and send to the other SRouter
                 String destination = clientIn.readLine();
                 System.out.println("Destination: " + destination);
-                serverRouterOut.println(destination);
 
+//                Scanner sc = new Scanner(System.in);
+//                System.out.println("Input: ");
+//                destination = sc.nextLine();
+                serverRouterOut.println(destination);
 
                 SThread t = new SThread(RoutingTable, clientSocket, ind, nickname); // creates a thread with a random port
                 t.start(); // starts the thread
                 ind++; // increments the index
-                System.out.println("ServerRouter connected with Client/Server: " + clientSocket.getInetAddress().getHostAddress());
+                System.out.println("ServerRouter connected with Client/Server: " + clientSocket.getInetAddress().getHostAddress() + "\n");
+
+                if (serverRouterIn.readLine().equals("true")){
+                    System.out.println(destination + " exists. Please wait for connection");
+
+                    // Set socket up for the clients to use
+                    clientOut.println("new ServerSocket(7777)");
+                }
+                else {
+                    System.out.println(destination + " does not exist.");
+                }
+                System.out.println(serverRouterIn.readLine());
 
             } catch (IOException e) {
                 System.err.println("Client/Server failed to connect.");
@@ -72,6 +87,5 @@ public class TCPServerRouter {
         // closing connections
         clientSocket.close();
         serverSideSocket.close();
-
     }
 }

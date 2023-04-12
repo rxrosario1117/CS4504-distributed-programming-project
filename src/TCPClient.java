@@ -56,12 +56,22 @@ public class TCPClient {
         out.println(destinationName);// initial send (IP of the destination Server)
         fromRouter = in.readLine();// initial receive from router (verification of connection)
         System.out.println("ServerRouter: " + fromRouter);
-        out.println("My name is " + userName);
+
+        //Goes to SThread
+        out.println(userName);
         out.println(localHost); // Client sends the IP of its machine as initial send
+
+        // Setting up connection through the SRouter
+        System.out.println(in.readLine());
 
         // for client2
         out.println(fileName);
         t0 = System.currentTimeMillis();
+
+        // Temp loop to stop client from terminating
+        while (true) {
+
+        }
 
 //        // Communication while loop
 //        while ((fromRouter = in.readLine()) != null) {
