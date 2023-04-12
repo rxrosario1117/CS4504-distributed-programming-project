@@ -10,6 +10,7 @@ public class SThread extends Thread {
 	private String inputLine, outputLine, destination, addr; // communication strings
 	private Socket outSocket; // socket for communicating with a destination
 	private int ind; // index in the routing table //port will store the port of the client/server
+	private String nickname;
 
 	/**
 	 * Constructor
@@ -22,6 +23,7 @@ public class SThread extends Thread {
 		RTable[index][0] = addr; // IP addresses
 		RTable[index][1] = toClient; // sockets for communication
 		RTable[index][2] = nickname;
+		this.nickname = nickname;
 
 		System.out.println("\nForeign address port (Client/server port) " + toClient.getPort() + "\n");
 	}
@@ -101,5 +103,14 @@ public class SThread extends Thread {
 			System.err.println("Could not listen to socket.");
 			System.exit(1);
 		}
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public boolean lookupNickname(String nickname) {
+
+		return RTable[0][2].equals(nickname);
 	}
 }
