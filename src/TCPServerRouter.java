@@ -67,16 +67,22 @@ public class TCPServerRouter {
                 ind++; // increments the index
                 System.out.println("ServerRouter connected with Client/Server: " + clientSocket.getInetAddress().getHostAddress() + "\n");
 
+                // Get IP from the RTable and check if the client exists
                 if (serverRouterIn.readLine().equals("true")){
                     System.out.println(destination + " exists. Please wait for connection");
 
+                    String clientCommPort = "8888";
                     // Set socket up for the clients to use
-                    clientOut.println("new ServerSocket(7777)");
+                    serverRouterOut.println(clientCommPort);
+                    // Send IP rx'd from SRouter 2
+                    clientOut.println(serverRouterIn.readLine());
+                    clientOut.println(clientCommPort);
+
                 }
                 else {
                     System.out.println(destination + " does not exist.");
                 }
-                System.out.println(serverRouterIn.readLine());
+
 
             } catch (IOException e) {
                 System.err.println("Client/Server failed to connect.");

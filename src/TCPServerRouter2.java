@@ -62,6 +62,13 @@ public class TCPServerRouter2 {
                 // Return T/F depending on the existence of a client/server
                 serverRouterOut.println(t.lookupNickname(destinationFromSRouter1));
 
+                // Port # for clients to use and send it to the client
+                String portNum = serverRouterIn.readLine();
+                clientOut.println(portNum);
+
+                // Return client IP address and send it to the other SRouter
+                serverRouterOut.println(t.getIP(destinationFromSRouter1));
+
             } catch (IOException e) {
                 System.err.println("Client/Server failed to connect.");
                 System.exit(1);

@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Arrays;
 
 public class SThread extends Thread {
 	private Object[][] RTable; // routing table
@@ -76,5 +77,18 @@ public class SThread extends Thread {
 
 	public boolean lookupNickname(String nickname) {
 		return RTable[0][2].equals(nickname);
+	}
+
+//	Return IP for client socket setup
+	public String getIP(String nickname) {
+		for (int i = 0; i < RTable.length; i++) {
+			for (int j = 0; j < RTable[i].length; j++) {
+				if (RTable[i][j] != null && RTable[i][2].equals(nickname)) {
+					return (String) RTable[i][j];
+				}
+			}
+		}
+
+		return "";
 	}
 }

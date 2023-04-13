@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.nio.file.StandardOpenOption;
 import java.util.Base64;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,9 +10,12 @@ public class TCPClient2 {
     public static void main(String[] args) throws IOException {
 
         // Variables for setting up connection and communication
-        Socket Socket = null; // socket to connect with ServerRouter
+        Socket serverRouterSocket = null; // socket to connect with ServerRouter
+        Socket clientCommSocket = null; // socket to connect clients
         PrintWriter out = null; // for writing to ServerRouter
         BufferedReader in = null; // for reading form ServerRouter
+        PrintWriter clientOut = null; // for writing to ServerRouter
+        BufferedReader clientIn = null; // for reading form ServerRouter
         InetAddress addr = InetAddress.getLocalHost();
         String localHost = addr.getHostAddress(); // Client machine's IP
         // name of client to be put in RTable
@@ -25,9 +29,9 @@ public class TCPClient2 {
         // Tries to connect to the ServerRouter
         try {
 //            Socket = new Socket(routerName, SockNum);
-            Socket = new Socket("localhost", SockNum);
-            out = new PrintWriter(Socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
+            serverRouterSocket = new Socket("localhost", SockNum);
+            out = new PrintWriter(serverRouterSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(serverRouterSocket.getInputStream()));
             out.println("Hello from client 2 AKA " + userName);
             out.println(userName);
         } catch (UnknownHostException e) {
@@ -56,6 +60,23 @@ public class TCPClient2 {
         // Communication process (initial sends/receives)
         out.println(destinationName);// initial send (IP of the destination Server)
         fromRouter = in.readLine();// initial receive from router (verification of connection)
+
+        // Get the port num for client comms
+        int portNum = Integer.parseInt(in.readLine());
+
+//        Set up socket for clients to communicate
+        try {
+            ServerSocket clientSocket = new ServerSocket(portNum);
+            clientCommSocket = clientSocket.accept();
+
+        }catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        // Reader/Writer for the clientCommSocket
+        clientIn = new BufferedReader(new InputStreamReader(clientCommSocket.getInputStream()));
+        clientOut = new PrintWriter(clientCommSocket.getOutputStream(), true);
+
         System.out.println("ServerRouter: " + fromRouter);
         out.println(SenderNickname);
         out.println(localHost); // Client sends the IP of its machine as initial send
@@ -65,9 +86,9 @@ public class TCPClient2 {
         t0 = System.currentTimeMillis();
 
         // Temp loop to stop client from terminating
-        while (true) {
-
-        }
+//        while (true) {
+//
+//        }
 
 //        // Communication while loop
 //        while ((fromRouter = in.readLine()) != null) {
@@ -125,5 +146,52 @@ public class TCPClient2 {
 //        } catch (IOException e) {
 //            System.out.println("Error writing to file: " + e.getMessage());
 //        }
+
+        String fromClient, fromServer;
+
+        clientOut.println("BYE");
+
+    // Rx while loop
+        // Communication while loop
+        String textType;
+        int index = 0;
+        String tempString = null;
+
+        System.out.println("Out of the while");
+        while ((fromClient = clientIn.readLine()) != null) {
+
+            System.out.println("In the while");
+
+            System.out.println("Client said: " + fromClient);
+            if(index == 0){
+                tempString = fromClient;
+                clientOut.println("CONNECTED");
+            }
+            if(tempString.contains(".txt")){
+                System.out.println("HERE");
+                if (fromClient.equals("Bye.")) { // exit statement
+                    clientOut.println(fromClient.toUpperCase());
+                    break;
+                }
+
+                fromServer = fromClient.toUpperCase(); // converting received message to upper case
+                System.out.println("Server said: " + fromServer);
+                clientOut.println(fromServer); // sending the converted message back to the Client via ServerRouter
+            }
+            else if (index != 0){
+                clientOut.println("NOT A TEXT FILE");
+                String encodedData = fromClient;
+                byte [] decodedData = Base64.getDecoder().decode(encodedData);
+                Path filePath = Paths.get("./NEWCantinaBand3.wav");
+                Files.write(filePath,decodedData, StandardOpenOption.CREATE_NEW);
+                break;
+            }
+            index++;
+        }
+
+        // closing connections
+        clientIn.close();
+        clientOut.close();
+
     }
 }

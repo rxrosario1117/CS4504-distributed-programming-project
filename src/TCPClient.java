@@ -9,9 +9,15 @@ public class TCPClient {
     public static void main(String[] args) throws IOException {
 
         // Variables for setting up connection and communication
-        Socket Socket = null; // socket to connect with ServerRouter
-        PrintWriter out = null; // for writing to ServerRouter
-        BufferedReader in = null; // for reading form ServerRouter
+        Socket serverCommSocket = null; // socket to connect with ServerRouter
+        Socket clientCommSocket = null; // socket to connect clients together
+        PrintWriter serverRouterOut = null; // for writing to ServerRouter
+        BufferedReader serverRouterIn = null; // for reading form ServerRouter
+        PrintWriter clientOutToSRouter = null; // for writing to ServerRouter
+        BufferedReader clientInFromSRouter = null; // for reading form ServerRouter
+        PrintWriter clientOut = null; // for writing to ServerRouter
+        BufferedReader clientIn = null; // for reading form ServerRouter
+
         InetAddress addr = InetAddress.getLocalHost();
         String localHost = addr.getHostAddress(); // Client machine's IP
         // name of client to be put in RTable
@@ -25,11 +31,11 @@ public class TCPClient {
         // Tries to connect to the ServerRouter
         try {
 //            Socket = new Socket(routerName, SockNum);
-            Socket = new Socket("localhost", SockNum);
-            out = new PrintWriter(Socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
-            out.println("Hello from client 1 AKA " + userName);
-            out.println(userName);
+            serverCommSocket = new Socket("localhost", SockNum);
+            serverRouterOut = new PrintWriter(serverCommSocket.getOutputStream(), true);
+            serverRouterIn = new BufferedReader(new InputStreamReader(serverCommSocket.getInputStream()));
+            serverRouterOut.println("Hello from client 1 AKA " + userName);
+            serverRouterOut.println(userName);
         } catch (UnknownHostException e) {
             System.err.println("Don't know about router: " + routerName);
             System.exit(1);
@@ -53,81 +59,103 @@ public class TCPClient {
         int msgCount = 0, totalMsgSize = 0, totalTransmissionSize = 0;
 
         // Communication process (initial sends/receives)
-        out.println(destinationName);// initial send (IP of the destination Server)
-        fromRouter = in.readLine();// initial receive from router (verification of connection)
+        serverRouterOut.println(destinationName);// initial send (IP of the destination Server)
+        fromRouter = serverRouterIn.readLine();// initial receive from router (verification of connection)
         System.out.println("ServerRouter: " + fromRouter);
 
         //Goes to SThread
-        out.println(userName);
-        out.println(localHost); // Client sends the IP of its machine as initial send
+        serverRouterOut.println(userName);
+        serverRouterOut.println(localHost); // Client sends the IP of its machine as initial send
 
         // Setting up connection through the SRouter
-        System.out.println(in.readLine());
+        System.out.println(serverRouterIn.readLine());
+        String destinationClientIP = serverRouterIn.readLine();
+        int portNum = Integer.parseInt(serverRouterIn.readLine());
+        try {
+            clientCommSocket = new Socket(destinationClientIP, portNum);
 
-        // for client2
-        out.println(fileName);
-        t0 = System.currentTimeMillis();
-
-        // Temp loop to stop client from terminating
-        while (true) {
-
+            if (clientCommSocket.isConnected()) {
+                serverRouterOut.close();
+                serverRouterIn.close();
+                serverCommSocket.close();
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
 
+        // for client2
+        serverRouterOut.println(fileName);
+        t0 = System.currentTimeMillis();
+
+        // Reader/Writer for the clientCommSocket
+        clientIn = new BufferedReader(new InputStreamReader(clientCommSocket.getInputStream()));
+        clientOut = new PrintWriter(clientCommSocket.getOutputStream(), true);
+
+//        while(true) {
+//
+//        }
+
+        clientOut.println("BYE");
+
+        System.out.println("Out of the while");
 //        // Communication while loop
-//        while ((fromRouter = in.readLine()) != null) {
-//            System.out.println("Server: " + fromRouter);
-//            t1 = System.currentTimeMillis();
-//            if (!fileName.contains(".txt")) {
-//                Path path = Paths.get(fileName);
-//                byte[] data = Files.readAllBytes(path);
-//
-//                String encodedString = Base64.getEncoder().encodeToString(data);
-//                out.write(encodedString);
-//                break;
-//            }
-//            // Updated to receive a final capitalized phrase from the server
-//            if (fromRouter.equals("BYE.")) /* exit statement */
-//                break;
-//
-//            t = t1 - t0;
-//
-//            // Captures the total transmission size of the message
-//            totalTransmissionSize += t;
-//            System.out.println("Cycle time: " + t);
-//
-//            fromUser = fromFile.readLine(); // reading strings from a file
-//            if (fromUser != null) {
-//                System.out.println("Client: " + fromUser);
-//                out.println(fromUser); // sending the strings to the Server via ServerRouter
-//
-//                msgCount++; // Incrementing message count
-//                totalMsgSize += fromUser.length(); // adding length of message to totalMsgSize
-//                t0 = System.currentTimeMillis();
-//            }
-//        }
-//
-//        // closing connections
-//        out.close();
-//        in.close();
-//        Socket.close();
-//
-//        // Stores the metrics gathered and performs some final calculations
-//        double avgMessageSize = 0, avgTransmissionTime = 0;
-//        if (msgCount > 0) {
-//            avgMessageSize = (double) totalMsgSize / msgCount; // Calculating average message size
-//            avgTransmissionTime = (double) totalTransmissionSize / msgCount;
-//        }
-//
-//        // Writing statistical results to results.txt
-//        try {
-//            FileWriter resultFW = new FileWriter("results.txt");
-//            BufferedWriter resultBW = new BufferedWriter(resultFW);
-//            resultBW.write("Average message size is: " + avgMessageSize);
-//            resultBW.newLine();
-//            resultBW.write("Average transmission time is: " + avgTransmissionTime);
-//            resultBW.close();
-//        } catch (IOException e) {
-//            System.out.println("Error writing to file: " + e.getMessage());
-//        }
+        while ((fromRouter = clientIn.readLine()) != null) {
+
+            System.out.println("In the while");
+
+            System.out.println("Server: " + fromRouter);
+            t1 = System.currentTimeMillis();
+            if (!fileName.contains(".txt")) {
+                Path path = Paths.get(fileName);
+                byte[] data = Files.readAllBytes(path);
+
+                String encodedString = Base64.getEncoder().encodeToString(data);
+                clientOut.write(encodedString);
+                break;
+            }
+
+            // Updated to receive a final capitalized phrase from the server
+            if (fromRouter.equals("BYE.")) /* exit statement */
+                break;
+
+            t = t1 - t0;
+
+            // Captures the total transmission size of the message
+            totalTransmissionSize += t;
+            System.out.println("Cycle time: " + t);
+
+            fromUser = fromFile.readLine(); // reading strings from a file
+            if (fromUser != null) {
+                System.out.println("Client: " + fromUser);
+                clientOut.println(fromUser); // sending the strings to the Server via ServerRouter
+
+                msgCount++; // Incrementing message count
+                totalMsgSize += fromUser.length(); // adding length of message to totalMsgSize
+                t0 = System.currentTimeMillis();
+            }
+        }
+
+        // closing connections
+        serverRouterOut.close();
+        serverRouterIn.close();
+
+        // Stores the metrics gathered and performs some final calculations
+        double avgMessageSize = 0, avgTransmissionTime = 0;
+        if (msgCount > 0) {
+            avgMessageSize = (double) totalMsgSize / msgCount; // Calculating average message size
+            avgTransmissionTime = (double) totalTransmissionSize / msgCount;
+        }
+
+        // Writing statistical results to results.txt
+        try {
+            FileWriter resultFW = new FileWriter("results.txt");
+            BufferedWriter resultBW = new BufferedWriter(resultFW);
+            resultBW.write("Average message size is: " + avgMessageSize);
+            resultBW.newLine();
+            resultBW.write("Average transmission time is: " + avgTransmissionTime);
+            resultBW.close();
+        } catch (IOException e) {
+            System.out.println("Error writing to file: " + e.getMessage());
+        }
     }
 }
