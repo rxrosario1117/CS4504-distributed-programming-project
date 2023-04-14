@@ -149,7 +149,7 @@ public class TCPClient2 {
 
         String fromClient, fromServer;
 
-        clientOut.println("BYE");
+        clientOut.println("hello");
 
     // Rx while loop
         // Communication while loop
@@ -157,17 +157,15 @@ public class TCPClient2 {
         int index = 0;
         String tempString = null;
 
-        System.out.println("Out of the while");
         while ((fromClient = clientIn.readLine()) != null) {
-
-            System.out.println("In the while");
 
             System.out.println("Client said: " + fromClient);
             if(index == 0){
                 tempString = fromClient;
                 clientOut.println("CONNECTED");
             }
-            if(tempString.contains(".txt")){
+//            if(tempString.contains(".txt")){
+            if(false){
                 System.out.println("HERE");
                 if (fromClient.equals("Bye.")) { // exit statement
                     clientOut.println(fromClient.toUpperCase());
@@ -178,11 +176,23 @@ public class TCPClient2 {
                 System.out.println("Server said: " + fromServer);
                 clientOut.println(fromServer); // sending the converted message back to the Client via ServerRouter
             }
-            else if (index != 0){
+//            else if (index != 0){
+            else if (true){
+
                 clientOut.println("NOT A TEXT FILE");
-                String encodedData = fromClient;
-                byte [] decodedData = Base64.getDecoder().decode(encodedData);
-                Path filePath = Paths.get("./NEWCantinaBand3.wav");
+
+//                int fileSize = Integer.parseInt(fromClient);
+//                System.out.println("File size: " + fileSize);
+
+                String encodedData = clientIn.readLine();
+
+                // Timer stops
+
+                byte[] decodedData = Base64.getDecoder().decode(encodedData);
+
+//                Path filePath = Paths.get("./NEWCantinaBand3.wav");
+//                Path filePath = Paths.get("./NEWtext.txt");
+                Path filePath = Paths.get("./NEWvideo.mp4");
                 Files.write(filePath,decodedData, StandardOpenOption.CREATE_NEW);
                 break;
             }

@@ -45,7 +45,9 @@ public class TCPClient {
         }
 
         // Variables for message passing
-        String fileName = "./CantinaBand3.wav";
+//        String fileName = "./CantinaBand3.wav";
+//        String fileName = "./file.txt";
+        String fileName = "./Lecture10-video.mp4";
         Reader reader = new FileReader(fileName);
         BufferedReader fromFile = new BufferedReader(reader); // reader for the string file
         String fromRouter; // messages received from ServerRouter
@@ -91,55 +93,20 @@ public class TCPClient {
         clientIn = new BufferedReader(new InputStreamReader(clientCommSocket.getInputStream()));
         clientOut = new PrintWriter(clientCommSocket.getOutputStream(), true);
 
-//        while(true) {
-//
-//        }
+        clientOut.println("hello");
 
-        clientOut.println("BYE");
+        Path path = Paths.get(fileName);
+        byte[] data = Files.readAllBytes(path);
 
-        System.out.println("Out of the while");
-//        // Communication while loop
-        while ((fromRouter = clientIn.readLine()) != null) {
+        System.out.println(clientIn.readLine());
+        System.out.println(clientIn.readLine());
+        System.out.println(clientIn.readLine());
+        String encodedString = Base64.getEncoder().encodeToString(data);
 
-            System.out.println("In the while");
+        // Timer start
+        clientOut.println(encodedString);
 
-            System.out.println("Server: " + fromRouter);
-            t1 = System.currentTimeMillis();
-            if (!fileName.contains(".txt")) {
-                Path path = Paths.get(fileName);
-                byte[] data = Files.readAllBytes(path);
-
-                String encodedString = Base64.getEncoder().encodeToString(data);
-                clientOut.write(encodedString);
-                break;
-            }
-
-            // Updated to receive a final capitalized phrase from the server
-            if (fromRouter.equals("BYE.")) /* exit statement */
-                break;
-
-            t = t1 - t0;
-
-            // Captures the total transmission size of the message
-            totalTransmissionSize += t;
-            System.out.println("Cycle time: " + t);
-
-            fromUser = fromFile.readLine(); // reading strings from a file
-            if (fromUser != null) {
-                System.out.println("Client: " + fromUser);
-                clientOut.println(fromUser); // sending the strings to the Server via ServerRouter
-
-                msgCount++; // Incrementing message count
-                totalMsgSize += fromUser.length(); // adding length of message to totalMsgSize
-                t0 = System.currentTimeMillis();
-            }
-        }
-
-        // closing connections
-        serverRouterOut.close();
-        serverRouterIn.close();
-
-        // Stores the metrics gathered and performs some final calculations
+                // Stores the metrics gathered and performs some final calculations
         double avgMessageSize = 0, avgTransmissionTime = 0;
         if (msgCount > 0) {
             avgMessageSize = (double) totalMsgSize / msgCount; // Calculating average message size
@@ -157,5 +124,12 @@ public class TCPClient {
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());
         }
+
+        // closing connections
+        serverRouterOut.close();
+        serverRouterIn.close();
+
+
+
     }
 }
