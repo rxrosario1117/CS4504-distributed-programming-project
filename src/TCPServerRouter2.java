@@ -1,5 +1,6 @@
 import java.net.*;
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class TCPServerRouter2 {
@@ -38,7 +39,8 @@ public class TCPServerRouter2 {
             System.err.println("Could not listen on port: 5555.");
             System.exit(1);
         }
-
+        LocalDateTime startTime = LocalDateTime.now();
+        LocalDateTime endTime = LocalDateTime.now();
         // Creating threads with accepted connections
         while (Running == true) {
             try {
@@ -60,7 +62,9 @@ public class TCPServerRouter2 {
                         "ServerRouter connected with Client/Server: " + clientSocket.getInetAddress().getHostAddress());
 
                 // Return T/F depending on the existence of a client/server
+                startTime = LocalDateTime.now();
                 serverRouterOut.println(t.lookupNickname(destinationFromSRouter1));
+                endTime = LocalDateTime.now();
 
                 // Port # for clients to use and send it to the client
                 String portNum = serverRouterIn.readLine();
@@ -73,7 +77,9 @@ public class TCPServerRouter2 {
                 System.err.println("Client/Server failed to connect.");
                 System.exit(1);
             }
+            System.out.println("start time: " + startTime + "end time: " + endTime);
         } // end while
+        System.out.println("start time: " + startTime + "end time: " + endTime);
 
         // closing connections
         clientSocket.close();

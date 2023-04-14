@@ -47,8 +47,9 @@ public class TCPClient {
 
         // Variables for message passing
 //        String fileName = "CantinaBand3.wav";
+//        String fileName = "yoda.wav";
 //        String fileName = "file.txt";
-        String fileName = "video.mp4";
+        String fileName = "video1.mp4";
         Reader reader = new FileReader(fileName);
         BufferedReader fromFile = new BufferedReader(reader); // reader for the string file
         String fromRouter; // messages received from ServerRouter
@@ -75,6 +76,7 @@ public class TCPClient {
         String destinationClientIP = serverRouterIn.readLine();
         int portNum = Integer.parseInt(serverRouterIn.readLine());
         try {
+            // added this because this line can't run till client2 is running but client has to be started first
             Thread.sleep(10000);
             clientCommSocket = new Socket(destinationClientIP, portNum);
 
