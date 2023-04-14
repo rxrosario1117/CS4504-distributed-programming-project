@@ -1,3 +1,4 @@
+import javax.sound.sampled.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -5,11 +6,12 @@ import java.net.UnknownHostException;
 
 public class TCPClient2 {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, LineUnavailableException {
 
         // Variables for setting up connection and communication
         Socket Socket = null; // socket to connect with ServerRouter
-        PrintWriter out = null; // for writing to ServerRouter
+        //PrintWriter out = null; // for writing to ServerRouter
+        OutputStream out = null;
         BufferedReader in = null; // for reading from ServerRouter
         InetAddress addr = InetAddress.getLocalHost();
         String host = addr.getHostAddress(); // Client machine's IP
@@ -21,9 +23,16 @@ public class TCPClient2 {
         // Tries to connect to the ServerRouter
         try {
             Socket = new Socket(routerName, SockNum, addr, 49999); // needs to be updated to constructor that sets local address and local port
-            out = new PrintWriter(Socket.getOutputStream(), true);
+//            out = new PrintWriter(Socket.getOutputStream(), true);
 //            in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
             in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
+            out = Socket.getOutputStream();
+            while (true) {
+                AudioInputStream audio = testPlay("Yoda.wav");
+                if (audio != null) {
+                    AudioSystem.write(audio,AudioFileFormat.Type.WAVE , out);
+                }
+            }
 
         }
         catch (UnknownHostException e) {
@@ -36,12 +45,12 @@ public class TCPClient2 {
         }
 
         // Variables for message passing
-        Reader reader = new FileReader("file.txt");
+        /*Reader reader = new FileReader("file.txt");
         BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
         String fromServer; // messages received from ServerRouter
         String fromUser; // messages sent to ServerRouter
 //			String address ="10.5.2.109"; // destination IP (Server)
-        String address ="192.168.1.69:49997"; // destination IP (Server)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
+        String address ="192.168.1.69:49998"; // destination IP (Server)  /// DEBUGGED AND LOOKED AT THE DESTINATION in line 49 in sthread
         // BUT, this doesn't work because the IP Address is the same for all
         // this one needs to be the IP of the device running the server it is looking for or 127.0.0.1
         // needs to be ip address:port number in 40000 and computer ip address needs to be checked to make sure it hasn't changed
@@ -49,7 +58,7 @@ public class TCPClient2 {
         long t0, t1, t;
 
         // Communication process (initial sends/receives
-        out.println(address);// initial send (IP of the destination Server)
+        /*out.println(address);// initial send (IP of the destination Server)
         fromServer = in.readLine();//initial receive from router (verification of connection)
         System.out.println("ServerRouter: " + fromServer);
 
@@ -71,11 +80,32 @@ public class TCPClient2 {
                 out.println(fromUser); // sending the strings to the Server via ServerRouter
                 t0 = System.currentTimeMillis();
             }
-        }
+        }*/
 
         // closing connections
         out.close();
         in.close();
         Socket.close();
+    }
+    public static AudioInputStream testPlay(String filename) {
+        AudioInputStream din = null;
+        try {
+            File file = new File(filename);
+            AudioInputStream in = AudioSystem.getAudioInputStream(file);
+            System.out.println("Before :: " + in.available());
+
+            AudioFormat baseFormat = in.getFormat();
+            AudioFormat decodedFormat =
+                    new AudioFormat(AudioFormat.Encoding.PCM_UNSIGNED, baseFormat.getSampleRate(),
+                            8, baseFormat.getChannels(), baseFormat.getChannels(),
+                            baseFormat.getSampleRate(), false);
+            din = AudioSystem.getAudioInputStream(decodedFormat, in);
+            System.out.println("After :: " + din.available());
+            return din;
+        } catch (Exception e) {
+            // Handle exception.
+            e.printStackTrace();
+        }
+        return din;
     }
 }

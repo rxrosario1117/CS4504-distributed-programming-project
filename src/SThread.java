@@ -54,7 +54,10 @@ public class SThread extends Thread
 						System.out.println("Found destination: " + destination);
 						outTo = new PrintWriter(outSocket.getOutputStream(), true); // assigns a writer
 				}}
-		
+
+		//need to set up something here to pass the .wav file to the server
+			
+
 		// Communication loop	
 		while ((inputLine = in.readLine()) != null) {
             System.out.println("Client/Server said: " + inputLine);
@@ -64,8 +67,8 @@ public class SThread extends Thread
 				
 				if ( outSocket != null){				
 				outTo.println(outputLine); // writes to the destination
-				}			
-       }// end while		 
+				}
+       }// end while
 		 }// end try
 			catch (IOException e) {
                System.err.println("Could not listen to socket.");
