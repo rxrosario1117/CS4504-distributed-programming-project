@@ -26,7 +26,7 @@ public class TCPServerRouter2 {
             System.out.println("ServerRouter2 is listening on port: "+ serverSideSocket.getLocalPort());
 
 //          ServerRouter Communication Setup
-            sRouterSocket = new Socket("192.168.1.71", 6666); // Request connection to other SRouter
+            sRouterSocket = new Socket("192.168.68.120", 6666); // Request connection to other SRouter
             serverRouterIn = new BufferedReader(new InputStreamReader(sRouterSocket.getInputStream()));
             serverRouterOut = new PrintWriter(sRouterSocket.getOutputStream(), true);
             System.out.println(serverRouterIn.readLine());

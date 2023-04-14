@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +23,7 @@ public class TCPClient2 {
         String userName = "T2";
 
         // IP for my local server router machine
-        String routerName = "192.168.1.71"; // ServerRouter localHost name
+        String routerName = "192.168.68.120"; // ServerRouter localHost name
 
         int SockNum = 5556; // port number
 
@@ -48,7 +49,7 @@ public class TCPClient2 {
         BufferedReader fromFile = new BufferedReader(reader); // reader for the string file
         String fromRouter; // messages received from ServerRouter
         String fromUser; // messages sent to ServerRouter
-        String address ="192.168.1.71";// Local IP for the server
+        String address ="192.168.68.120";// Local IP for the server
         String destinationName = "T1"; // destination Name (Client 2)
         String SenderNickname = "T2";
 
@@ -61,8 +62,10 @@ public class TCPClient2 {
         out.println(destinationName);// initial send (IP of the destination Server)
         fromRouter = in.readLine();// initial receive from router (verification of connection)
 
+        String portNUmber = in.readLine();
+//        System.out.println(portNUmber);
         // Get the port num for client comms
-        int portNum = Integer.parseInt(in.readLine());
+        int portNum = Integer.parseInt(portNUmber);
 
 //        Set up socket for clients to communicate
         try {
@@ -156,7 +159,7 @@ public class TCPClient2 {
         String textType;
         int index = 0;
         String tempString = null;
-
+        var endTime = LocalDateTime.now();
         while ((fromClient = clientIn.readLine()) != null) {
 
             System.out.println("Client said: " + fromClient);
@@ -187,12 +190,13 @@ public class TCPClient2 {
                 String encodedData = clientIn.readLine();
 
                 // Timer stops
+                endTime = LocalDateTime.now();
 
                 byte[] decodedData = Base64.getDecoder().decode(encodedData);
 
-//                Path filePath = Paths.get("./NEWCantinaBand3.wav");
-//                Path filePath = Paths.get("./NEWtext.txt");
-                Path filePath = Paths.get("./NEWvideo.mp4");
+//                Path filePath = Paths.get("NEWCantinaBand3.wav");
+//                Path filePath = Paths.get("NEWtext.txt");
+                Path filePath = Paths.get("NEWvideo.mp4");
                 Files.write(filePath,decodedData, StandardOpenOption.CREATE_NEW);
                 break;
             }
@@ -202,6 +206,6 @@ public class TCPClient2 {
         // closing connections
         clientIn.close();
         clientOut.close();
-
+        System.out.println(endTime);
     }
 }

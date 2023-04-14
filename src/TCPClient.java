@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +25,7 @@ public class TCPClient {
         String userName = "T1";
 
         // IP for my local server router machine
-        String routerName = "192.168.1.71"; // ServerRouter localHost name
+        String routerName = "192.168.68.120"; // ServerRouter localHost name
 
         int SockNum = 5555; // port number
 
@@ -45,14 +46,14 @@ public class TCPClient {
         }
 
         // Variables for message passing
-//        String fileName = "./CantinaBand3.wav";
-//        String fileName = "./file.txt";
-        String fileName = "./Lecture10-video.mp4";
+//        String fileName = "CantinaBand3.wav";
+//        String fileName = "file.txt";
+        String fileName = "video.mp4";
         Reader reader = new FileReader(fileName);
         BufferedReader fromFile = new BufferedReader(reader); // reader for the string file
         String fromRouter; // messages received from ServerRouter
         String fromUser; // messages sent to ServerRouter
-        String address ="192.168.1.71";// Local IP for the server
+        String address ="192.168.68.120";// Local IP for the server
         String destinationName = "T2"; // destination Name (Client 2)
 
         long t0, t1, t;
@@ -70,10 +71,11 @@ public class TCPClient {
         serverRouterOut.println(localHost); // Client sends the IP of its machine as initial send
 
         // Setting up connection through the SRouter
-        System.out.println(serverRouterIn.readLine());
+//        System.out.println(serverRouterIn.readLine());
         String destinationClientIP = serverRouterIn.readLine();
         int portNum = Integer.parseInt(serverRouterIn.readLine());
         try {
+            Thread.sleep(10000);
             clientCommSocket = new Socket(destinationClientIP, portNum);
 
             if (clientCommSocket.isConnected()) {
@@ -82,7 +84,7 @@ public class TCPClient {
                 serverCommSocket.close();
             }
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage() + " at ip: " + destinationClientIP + " at port: " + portNum);
         }
 
         // for client2
@@ -103,7 +105,8 @@ public class TCPClient {
         System.out.println(clientIn.readLine());
         String encodedString = Base64.getEncoder().encodeToString(data);
 
-        // Timer start
+//        System.out.println(LocalDateTime.now());
+        var startTime = LocalDateTime.now();
         clientOut.println(encodedString);
 
                 // Stores the metrics gathered and performs some final calculations
@@ -128,7 +131,7 @@ public class TCPClient {
         // closing connections
         serverRouterOut.close();
         serverRouterIn.close();
-
+        System.out.println(startTime);
 
 
     }

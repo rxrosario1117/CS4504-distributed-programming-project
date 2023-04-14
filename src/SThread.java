@@ -33,7 +33,7 @@ public class SThread extends Thread {
 			// Store client nickname into RTable and send confirmation fo connection
 			clientNickname = in.readLine(); // initial read (the destination for writing)
 			System.out.println(clientNickname + " has been stored in the RTable\n");
-			out.println("Connected to the router."); // confirmation of connection
+//			out.println("Connected to the router."); // confirmation of connection
 
 			// waits 10 seconds to let the routing table fill with all machines' information
 			try {

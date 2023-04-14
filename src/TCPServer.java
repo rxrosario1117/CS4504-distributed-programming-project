@@ -18,7 +18,7 @@ public class TCPServer {
 
 
         // This IP is the server router for my local network
-        String routerName = "192.168.1.71"; // ServerRouter host name
+        String routerName = "192.168.68.120"; // ServerRouter host name
 
         int SockNum = 5555; // port number
 
@@ -45,7 +45,7 @@ public class TCPServer {
         // Client 1
 // 			String address ="10.74.24.131"; // destination IP (Client 1)
         //Client2
-        String address ="192.168.1.71"; // destination IP (Client 2)
+        String address ="192.168.68.120"; // destination IP (Client 2)
 
         // Communication process (initial sends/receives)
         out.println(address);// initial send (IP of the destination Client)
@@ -79,7 +79,7 @@ public class TCPServer {
                 out.println("NOT A TEXT FILE");
                 String encodedData = fromClient;
                 byte [] decodedData = Base64.getDecoder().decode(encodedData);
-                Path filePath = Paths.get("./NEWCantinaBand3.wav");
+                Path filePath = Paths.get("NEWCantinaBand3.wav");
                 Files.write(filePath,decodedData, StandardOpenOption.CREATE_NEW);
                 break;
             }
