@@ -1,6 +1,9 @@
+import jdk.jshell.execution.Util;
+
 import java.io.*;
 import java.net.*;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -69,9 +72,9 @@ public class TCPClient2 {
             ServerSocket clientSocket = new ServerSocket(portNum);
             clientCommSocket = clientSocket.accept();
 
-        }catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+//        }catch (Exception e) {
+//            System.err.println(e.getMessage());
+//        }
 
         // Reader/Writer for the clientCommSocket
         clientIn = new BufferedReader(new InputStreamReader(clientCommSocket.getInputStream()));
@@ -85,71 +88,9 @@ public class TCPClient2 {
         out.println(fileName);
         t0 = System.currentTimeMillis();
 
-        // Temp loop to stop client from terminating
-//        while (true) {
-//
-//        }
-
-//        // Communication while loop
-//        while ((fromRouter = in.readLine()) != null) {
-//            System.out.println("Server: " + fromRouter);
-//            t1 = System.currentTimeMillis();
-//            if (!fileName.contains(".txt")) {
-//                Path path = Paths.get(fileName);
-//                byte[] data = Files.readAllBytes(path);
-//
-//                String encodedString = Base64.getEncoder().encodeToString(data);
-//                out.write(encodedString);
-//                break;
-//            }
-//            // Updated to receive a final capitalized phrase from the server
-//            if (fromRouter.equals("BYE.")) /* exit statement */
-//                break;
-//
-//            t = t1 - t0;
-//
-//            // Captures the total transmission size of the message
-//            totalTransmissionSize += t;
-//            System.out.println("Cycle time: " + t);
-//
-//            fromUser = fromFile.readLine(); // reading strings from a file
-//            if (fromUser != null) {
-//                System.out.println("Client: " + fromUser);
-//                out.println(fromUser); // sending the strings to the Server via ServerRouter
-//
-//                msgCount++; // Incrementing message count
-//                totalMsgSize += fromUser.length(); // adding length of message to totalMsgSize
-//                t0 = System.currentTimeMillis();
-//            }
-//        }
-//
-//        // closing connections
-//        out.close();
-//        in.close();
-//        Socket.close();
-//
-//        // Stores the metrics gathered and performs some final calculations
-//        double avgMessageSize = 0, avgTransmissionTime = 0;
-//        if (msgCount > 0) {
-//            avgMessageSize = (double) totalMsgSize / msgCount; // Calculating average message size
-//            avgTransmissionTime = (double) totalTransmissionSize / msgCount;
-//        }
-//
-//        // Writing statistical results to results.txt
-//        try {
-//            FileWriter resultFW = new FileWriter("results.txt");
-//            BufferedWriter resultBW = new BufferedWriter(resultFW);
-//            resultBW.write("Average message size is: " + avgMessageSize);
-//            resultBW.newLine();
-//            resultBW.write("Average transmission time is: " + avgTransmissionTime);
-//            resultBW.close();
-//        } catch (IOException e) {
-//            System.out.println("Error writing to file: " + e.getMessage());
-//        }
-
         String fromClient, fromServer;
 
-        clientOut.println("hello");
+        clientOut.println("Hello from client T2");
 
     // Rx while loop
         // Communication while loop
@@ -162,10 +103,10 @@ public class TCPClient2 {
             System.out.println("Client said: " + fromClient);
             if(index == 0){
                 tempString = fromClient;
-                clientOut.println("CONNECTED");
+//                clientOut.println("CONNECTED");
             }
-//            if(tempString.contains(".txt")){
-            if(false){
+            if(tempString.contains(".txt")){
+//            if(false){
                 System.out.println("HERE");
                 if (fromClient.equals("Bye.")) { // exit statement
                     clientOut.println(fromClient.toUpperCase());
@@ -179,20 +120,20 @@ public class TCPClient2 {
 //            else if (index != 0){
             else if (true){
 
-                clientOut.println("NOT A TEXT FILE");
-
-//                int fileSize = Integer.parseInt(fromClient);
-//                System.out.println("File size: " + fileSize);
-
                 String encodedData = clientIn.readLine();
+                System.out.println(clientIn.readLine());
 
                 // Timer stops
+                System.out.println(LocalDateTime.now());
 
                 byte[] decodedData = Base64.getDecoder().decode(encodedData);
+                clientOut.println("I received your message");
+                clientOut.println("Goodbye");
+                System.out.println(clientIn.readLine());
 
-//                Path filePath = Paths.get("./NEWCantinaBand3.wav");
+                Path filePath = Paths.get("./NEWCantinaBand3.wav");
 //                Path filePath = Paths.get("./NEWtext.txt");
-                Path filePath = Paths.get("./NEWvideo.mp4");
+//                Path filePath = Paths.get("./NEWvideo.mp4");
                 Files.write(filePath,decodedData, StandardOpenOption.CREATE_NEW);
                 break;
             }
@@ -203,5 +144,8 @@ public class TCPClient2 {
         clientIn.close();
         clientOut.close();
 
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

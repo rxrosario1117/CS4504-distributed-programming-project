@@ -30,7 +30,6 @@ public class TCPServerRouter2 {
             serverRouterIn = new BufferedReader(new InputStreamReader(sRouterSocket.getInputStream()));
             serverRouterOut = new PrintWriter(sRouterSocket.getOutputStream(), true);
             System.out.println(serverRouterIn.readLine());
-//            out.println("ServerRouters are connected on port: " + sRouterSocket.getPort() + "\n");
             serverRouterOut.println("Hello from SRouter 2");
             destinationFromSRouter1 = serverRouterIn.readLine();
 
@@ -68,11 +67,14 @@ public class TCPServerRouter2 {
 
                 // Return client IP address and send it to the other SRouter
                 serverRouterOut.println(t.getIP(destinationFromSRouter1));
+                serverRouterOut.println(destinationFromSRouter1 + " found, please wait for connection");
 
+            } catch (SocketException e) {
+                System.out.println("Connection done");
             } catch (IOException e) {
                 System.err.println("Client/Server failed to connect.");
-                System.exit(1);
             }
+                System.exit(1);
         } // end while
 
         // closing connections

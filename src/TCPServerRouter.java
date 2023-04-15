@@ -57,9 +57,6 @@ public class TCPServerRouter {
                 String destination = clientIn.readLine();
                 System.out.println("Destination: " + destination);
 
-//                Scanner sc = new Scanner(System.in);
-//                System.out.println("Input: ");
-//                destination = sc.nextLine();
                 serverRouterOut.println(destination);
 
                 SThread t = new SThread(RoutingTable, clientSocket, ind, nickname); // creates a thread with a random port
@@ -69,7 +66,7 @@ public class TCPServerRouter {
 
                 // Get IP from the RTable and check if the client exists
                 if (serverRouterIn.readLine().equals("true")){
-                    System.out.println(destination + " exists. Please wait for connection");
+                    clientOut.println(destination + " found. Please wait for connection");
 
                     String clientCommPort = "8888";
                     // Set socket up for the clients to use
