@@ -50,15 +50,8 @@ public class TCPClient2 {
         Reader reader = new FileReader(fileName);
         BufferedReader fromFile = new BufferedReader(reader); // reader for the string file
         String fromRouter; // messages received from ServerRouter
-        String fromUser; // messages sent to ServerRouter
-        String address ="192.168.1.71";// Local IP for the server
         String destinationName = "T1"; // destination Name (Client 2)
         String SenderNickname = "T2";
-
-        long t0, t1, t;
-
-        // Variables for calculations and gathering data
-        int msgCount = 0, totalMsgSize = 0, totalTransmissionSize = 0;
 
         // Communication process (initial sends/receives)
         out.println(destinationName);// initial send (IP of the destination Server)
@@ -84,9 +77,7 @@ public class TCPClient2 {
         out.println(SenderNickname);
         out.println(localHost); // Client sends the IP of its machine as initial send
 
-
         out.println(fileName);
-        t0 = System.currentTimeMillis();
 
         String fromClient, fromServer;
 
@@ -131,8 +122,8 @@ public class TCPClient2 {
                 clientOut.println("Goodbye");
                 System.out.println(clientIn.readLine());
 
-                Path filePath = Paths.get("./NEWCantinaBand3.wav");
-//                Path filePath = Paths.get("./NEWtext.txt");
+//                Path filePath = Paths.get("./NEWCantinaBand3.wav");
+                Path filePath = Paths.get("./NEWtext.txt");
 //                Path filePath = Paths.get("./NEWvideo.mp4");
                 Files.write(filePath,decodedData, StandardOpenOption.CREATE_NEW);
                 break;

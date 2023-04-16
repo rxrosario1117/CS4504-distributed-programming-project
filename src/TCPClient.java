@@ -50,17 +50,17 @@ public class TCPClient {
         }
 
         // Variables for message passing
-        String fileName = "./CantinaBand3.wav";
-//        String fileName = "./file.txt";
+//        String fileName = "./CantinaBand3.wav";
+        String fileName = "./file.txt";
 //        String fileName = "A.Quiet.Place.2018.720p.BluRay.x264-[YTS.AM].mp4";
         Reader reader = new FileReader(fileName);
         BufferedReader fromFile = new BufferedReader(reader); // reader for the string file
         String fromRouter; // messages received from ServerRouter
-        String destinationName = "T2"; // destination Name (Client 2)
 
-//        Scanner sc = new Scanner(System.in);
-//        System.out.print("Who would you like to communicate with?: ");
-//        destinationName = sc.nextLine();
+        String destinationName = "T2"; // destination Name (Client 2)
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Who would you like to communicate with?: ");
+        destinationName = sc.nextLine();
 
         // Communication process (initial sends/receives)
         serverRouterOut.println(destinationName);// initial send (IP of the destination Server)
@@ -76,7 +76,6 @@ public class TCPClient {
         String destinationClientIP = serverRouterIn.readLine();
         int portNum = Integer.parseInt(serverRouterIn.readLine());
         try {
-//            Thread.sleep(5000);
             clientCommSocket = new Socket(destinationClientIP, portNum);
 
             if (clientCommSocket.isConnected()) {
@@ -103,8 +102,6 @@ public class TCPClient {
         byte[] data = Files.readAllBytes(path);
 
         System.out.println(clientIn.readLine());
-//        System.out.println(clientIn.readLine() + "this connected");
-//        System.out.println(clientIn.readLine() + "that connected");
         String encodedString = Base64.getEncoder().encodeToString(data);
 
         // Timer start
